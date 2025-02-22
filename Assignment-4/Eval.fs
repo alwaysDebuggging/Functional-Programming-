@@ -9,8 +9,11 @@ module Interpreter.Eval
         match a with
         | Num int -> Some int
         
-        | Var v -> st.map.TryFind v 
-                   
+        | Var v -> st.map.TryFind v
+        
+        | Sum (ex1, ex2) ->  match (arithEval ex1 st , arithEval ex2 st) with
+                                | (Some exp1, Some exp2) -> Some (exp1 - exp2)
+                                | _ -> failwith "todo"           
             
         | Add(ex1, ex2) ->  match (arithEval ex1 st , arithEval ex2 st) with
                                 | (Some exp1, Some exp2) -> Some (exp1 + exp2)
