@@ -62,7 +62,7 @@ module Interpreter.Eval
                             let b = arithEval ex2 st
                             
                             Option.bind(fun x ->
-                                Option.bind(fun y -> if ex2 <> Num 0 || ex1 <> Num 0 then Some (x / y) else None
+                                Option.bind(fun y -> if ex2 <> Num 0 then (x / y) else None
                                 ) b
                             ) a
  
@@ -75,7 +75,7 @@ module Interpreter.Eval
                             let b = arithEval ex2 st
                             
                             Option.bind(fun x ->
-                                Option.bind(fun y-> if ex2 <> Num 0 || ex1 <> Num 0 then Some (x % y) else None
+                                Option.bind(fun y-> if ex2 <> Num 0 then Some (x % y) else None
                                 ) b
                             ) a
     ;;
