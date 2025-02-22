@@ -29,7 +29,6 @@ module Interpreter.State
            Some  {
              map = st.map.Add(x,0) // returned a new Map containing the old and the new value
                                    // new state containing a new Map with the old values and the new value
-             
              }
             
         else
