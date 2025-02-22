@@ -40,10 +40,14 @@ module Interpreter.State
     ;;
         
         
-    let setVar (x: string) (v: int) (st: state) : state option =
+    let setVar (x: string) (v: int) (st: state)  =
+        if  st.map.ContainsKey x then
             Some  {
-             map = st.map.Add(x,v)   
-          }
+             map = st.map.Add(x,v) // returned a new Map containing the old and the new value
+                                   // new state containing a new Map with the old values and the new value
+             }
+        else
+            None
     ;;
     
     let push _ = failwith "not implemented"

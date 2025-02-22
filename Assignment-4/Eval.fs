@@ -20,19 +20,50 @@ module Interpreter.Eval
                                 | _ -> None
                             
         | Div (ex1, ex2) -> match (arithEval ex1 st , arithEval ex2 st) with
-                                | (Some exp1, Some exp2) -> if ex2 <> Num 0 then
-                                                                Some (exp1 / exp2)
-                                                            else
-                                                                None
+                                | (Some _, Some 0) -> None
+                                | (Some exp1, Some exp2)-> Some (exp1 / exp2)       
                                 | _ -> None
+                            
+                            
+                            // let a = arithEval ex1 st
+                            // let b = arithEval ex2 st
+                            //
+                            // match (a, b) with
+                            // | (Some _, Some 0) -> None
+                            // | (Some exp1, Some exp2)-> Some (exp1 / exp2)       
+                            // | _ -> None
+                                
+                                // match (arithEval ex1 st , arithEval ex2 st) with
+                                // | (Some exp1, Some exp2) -> if ex2 <> Num 0 then
+                                //                                 Some (exp1 / exp2)
+                                //                             else
+                                //                                 None
+                                // | _ -> None
                                 
  
         | Mod (ex1, ex2) -> match (arithEval ex1 st , arithEval ex2 st) with
-                                | (Some exp1, Some exp2) -> if ex2 <> Num 0 then
-                                                                Some (exp1 % exp2)
-                                                            else
-                                                                None
+                                | (Some _, Some 0) -> None
+                                | (Some exp1, Some exp2)-> Some (exp1 / exp2)       
                                 | _ -> None
+                            
+                            
+                            
+                            // let a = arithEval ex1 st
+                            // let b = arithEval ex2 st
+                            //
+                            // match (a, b) with
+                            // | (Some _, Some 0) -> None
+                            // | (Some exp1, Some exp2)-> Some (exp1 % exp2)                  
+                            // | _ -> None
+                            
+                            
+                            
+                                // match (arithEval ex1 st , arithEval ex2 st) with
+                                // | (Some exp1, Some exp2) -> if ex2 <> Num 0 then
+                                //                                 Some (exp1 % exp2)
+                                //                             else
+                                //                                 None
+                                // | _ -> None
     ;;
         
         
