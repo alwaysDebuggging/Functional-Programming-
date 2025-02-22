@@ -21,7 +21,7 @@ module Interpreter.Eval
                                 | _ -> failwith "todo"
                             
         | Div (ex1, ex2) -> match (arithEval ex1 st , arithEval ex2 st) with
-                                | (Some exp1, Some exp2) -> if ex2 <> Num 0 then
+                                | (Some exp1, Some exp2) -> if ex2 <> Num 0 || ex1 <> Num 0 then
                                                                 Some (exp1 / exp2)
                                                             else
                                                                 None
@@ -29,7 +29,7 @@ module Interpreter.Eval
                                 
  
         | Mod (ex1, ex2) -> match (arithEval ex1 st , arithEval ex2 st) with
-                                | (Some exp1, Some exp2) -> if ex2 <> Num 0 then
+                                | (Some exp1, Some exp2) -> if ex2 <> Num 0 || ex1 <> Num 0 then
                                                                 Some (exp1 % exp2)
                                                             else
                                                                 None
@@ -63,7 +63,7 @@ module Interpreter.Eval
                             let b = arithEval ex2 st
                             
                             Option.bind(fun x ->
-                                Option.bind(fun y -> if y <> 0 then Some (x / y) else None
+                                Option.bind(fun y -> if ex2 <> Num 0 || ex1 <> Num 0 then Some (x / y) else None
                                 ) b
                             ) a
  
@@ -76,7 +76,7 @@ module Interpreter.Eval
                             let b = arithEval ex2 st
                             
                             Option.bind(fun x ->
-                                Option.bind(fun y-> if y <> 0 then Some (x % y) else None
+                                Option.bind(fun y-> if ex2 <> Num 0 || ex1 <> Num 0 then Some (x % y) else None
                                 ) b
                             ) a
     ;;
