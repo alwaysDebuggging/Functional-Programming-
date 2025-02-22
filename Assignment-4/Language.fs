@@ -8,7 +8,8 @@ type error =
     | InvalidVarName of string
 
 type aexpr =
-    | Num of int   
+    | Num of int
+    | Var of string
     | Add of aexpr * aexpr
     | Mul of aexpr * aexpr
     | Div of aexpr * aexpr

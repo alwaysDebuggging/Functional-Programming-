@@ -10,22 +10,19 @@ module Interpreter.State
          let a = String.forall predicate v 
          
          b && a
-         
-        ;;
+    ;;
         
  
     let reservedVariableName v =
          let lst = ["if"; "then"; "else"; "while"; "declare"; "print"; "random"; "fork"; "__result__"]
          List.contains  v lst
-       
     ;;
         
     type state = {
-        map: Map<string, int>
-        
-    }
+        map: Map<string, int>   
+    };;
     
-    let mkState () = {map= Map.empty}
+    let mkState () = {map= Map.empty};;
            
     let declare (x: string) (st: state) =
         if not (reservedVariableName x) && validVariableName(x) && not (st.map.ContainsKey x) then
@@ -37,10 +34,18 @@ module Interpreter.State
             
         else
             None
-        ;;
+    ;;
         
-    let getVar _ = failwith "not implemented"
-    let setVar _ = failwith "not implemented"
+    let getVar (x: string) (st: state) =
+        st.map.TryFind x
+    ;;
+        
+        
+    let setVar (x: string) (v: int) (st: state) : state option =
+            Some  {
+             map = st.map.Add(x,v)   
+          }
+    ;;
     
     let push _ = failwith "not implemented"
     let pop _ = failwith "not implemented"     
