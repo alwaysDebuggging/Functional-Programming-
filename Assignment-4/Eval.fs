@@ -11,32 +11,28 @@ module Interpreter.Eval
         
         | Var v -> st.map.TryFind v
         
-        | Sum (ex1, ex2) ->  match (arithEval ex1 st , arithEval ex2 st) with
-                                | (Some exp1, Some exp2) -> Some (exp1 - exp2)
-                                | _ -> failwith "todo"           
-            
         | Add(ex1, ex2) ->  match (arithEval ex1 st , arithEval ex2 st) with
                                 | (Some exp1, Some exp2) -> Some (exp1 + exp2)
-                                | _ -> failwith "todo"
+                                | _ -> None
                      
         | Mul (ex1, ex2) -> match (arithEval ex1 st , arithEval ex2 st) with
                                 | (Some exp1, Some exp2) -> Some (exp1 * exp2)
-                                | _ -> failwith "todo"
+                                | _ -> None
                             
         | Div (ex1, ex2) -> match (arithEval ex1 st , arithEval ex2 st) with
-                                | (Some exp1, Some exp2) -> if ex2 <> Num 0 || ex1 <> Num 0 then
+                                | (Some exp1, Some exp2) -> if ex2 <> Num 0 then
                                                                 Some (exp1 / exp2)
                                                             else
                                                                 None
-                                | _ -> failwith "todo"
+                                | _ -> None
                                 
  
         | Mod (ex1, ex2) -> match (arithEval ex1 st , arithEval ex2 st) with
-                                | (Some exp1, Some exp2) -> if ex2 <> Num 0 || ex1 <> Num 0 then
+                                | (Some exp1, Some exp2) -> if ex2 <> Num 0 then
                                                                 Some (exp1 % exp2)
                                                             else
                                                                 None
-                                | _ -> failwith "todo"
+                                | _ -> None
     ;;
         
         

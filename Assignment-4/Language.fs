@@ -11,7 +11,6 @@ type aexpr =
     | Num of int
     | Var of string
     | Add of aexpr * aexpr
-    | Sum of aexpr * aexpr
     | Mul of aexpr * aexpr
     | Div of aexpr * aexpr
     | Mod of aexpr * aexpr
