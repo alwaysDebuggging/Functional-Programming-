@@ -1,10 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "6hk/LpyMPdU=",
+  "dgSpecHash": "h362/w4efUY=",
   "success": true,
   "projectFilePath": "C:\\Users\\denni\\OneDrive - ITU\\GitHub\\Functional Programming\\Functional-Programming-\\Assignment-4\\Assignment4.fsproj",
   "expectedPackageFiles": [
-    "C:\\Users\\denni\\.nuget\\packages\\fsharp.core\\8.0.403\\fsharp.core.8.0.403.nupkg.sha512",
+    "C:\\Users\\denni\\.nuget\\packages\\fsharp.core\\9.0.100\\fsharp.core.9.0.100.nupkg.sha512",
     "C:\\Users\\denni\\.nuget\\packages\\microsoft.netcore.app.ref\\7.0.20\\microsoft.netcore.app.ref.7.0.20.nupkg.sha512",
     "C:\\Users\\denni\\.nuget\\packages\\microsoft.windowsdesktop.app.ref\\7.0.20\\microsoft.windowsdesktop.app.ref.7.0.20.nupkg.sha512",
     "C:\\Users\\denni\\.nuget\\packages\\microsoft.aspnetcore.app.ref\\7.0.20\\microsoft.aspnetcore.app.ref.7.0.20.nupkg.sha512"

@@ -9,7 +9,7 @@ type error =
 
 type aexpr =
     | Num of int
-    | Var of string
+    | Var of string  // Remove if you want to start without State.fs
     | Add of aexpr * aexpr
     | Mul of aexpr * aexpr
     | Div of aexpr * aexpr
