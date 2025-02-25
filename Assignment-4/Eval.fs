@@ -149,6 +149,7 @@ module Interpreter.Eval
         | Not ex1 -> let a = boolEval ex1 st
                      
                      a |> Option.bind(fun x -> Some (not x))
+    ;;
                      
         
     // decleared should call declare with v and a state st since it says o return st
