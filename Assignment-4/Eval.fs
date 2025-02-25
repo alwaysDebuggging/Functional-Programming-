@@ -106,12 +106,51 @@ module Interpreter.Eval
                             let b = arithEval ex2 st
                             
                             Option.bind(fun x ->
-                                Option.bind(fun y-> if y <> 0 then Some (x % y) else None
-                                ) b
-                            ) a
+                                Option.bind(fun y-> if y <> 0 then Some (x % y) else None 
+                                )b
+                            )a
+                              // second way to do it
+                            
+                            ///Option.bind(fun x -> Option.bind(fun y-> if y <> 0 then Some (x % y) else None ) (arithEval2 ex2 st)) (arithEval2 ex1 st)           
     ;;
     
-    let boolEval _= failwith "not implemented"
+    let rec boolEval b st : bool option =
+        match b with
+        | TT ->  Some true
+        | Eq (ex1, ex2) -> let a = arithEval2 ex1 st
+                           let b = arithEval2 ex2 st
+                           
+                           Option.bind (fun x ->
+                               Option.bind(fun y ->  Some ((=) x y)
+                               ) b
+                           )a
+                        
+        | Lt (ex1, ex2) -> let a = arithEval ex1 st 
+                           let b = arithEval ex2 st
+                           
+                           Option.bind (fun x ->
+                               Option.bind(fun y ->  Some ((<) x y)
+                               ) b
+                           )a
+
+        | Conj (ex1, ex2) -> (*let a = boolEval ex1 st 
+                             let b = boolEval ex2 st*)
+                             
+                             
+                             //Option.bind(fun  x y ->  Some ((&&) x y)) a b
+                             
+                             Option.bind (fun x ->
+                                Option.bind(fun y ->  Some ((&&) x y)
+                                ) (boolEval ex2 st)
+                             ) (boolEval ex1 st)
+                          
+                             //Some ((&&) a b)
+        
+        | Not ex1 -> let a = boolEval ex1 st
+                     
+                     a |> Option.bind(fun x -> Some (not x))
+                     
+        
     // decleared should call declare with v and a state st since it says o return st
     // with variable v decleared
         

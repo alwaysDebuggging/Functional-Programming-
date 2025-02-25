@@ -26,7 +26,7 @@ type bexpr =
     | Eq of aexpr * aexpr
     | Lt of aexpr * aexpr
     | Conj of bexpr * bexpr
-    | Not of bexpr
+    | Not of bexpr 
     
 let FF = Not TT
 let (~~) b = Not b
