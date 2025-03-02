@@ -100,7 +100,7 @@ module Interpreter.Eval
     let rec stmntEval (s: stmnt) (st: state) : state option =
         match s with
         | Skip -> Some st 
-        | Declare s -> declare s st 
+        | Declare v -> declare v st 
         | Assign(v, a) -> let b = arithEval2 a st
                           match b with
                           | None -> None
@@ -123,7 +123,7 @@ module Interpreter.Eval
                                             let c = stmntEval s st
                                             match c with
                                             | None -> None
-                                            | Some stt -> stmntEval  stt //whatd needs to be the stmnt
+                                            | Some stt -> stmntEval (While(guard, s)) stt 
                                          else
                                              Some st
     ;;
