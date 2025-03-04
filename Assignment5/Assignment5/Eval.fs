@@ -40,6 +40,7 @@ module Interpreter.Eval
                                 Option.bind(fun y-> if y <> 0 then Some (x % y) else None 
                                 )b
                             )a
+       
     ;;
     
     let rec boolEval b st : bool option =
