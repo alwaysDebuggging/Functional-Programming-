@@ -3,59 +3,60 @@ module Interpreter.Eval
     open Interpreter.Language
     open Result
     open Language
-    open State
+    open Interpreter.State
        
-    let rec arithEval2 (a: aexpr) (st: state) =
+    let rec arithEval (a: aexpr) (st: state) =
         match a with
         | Num int -> Some int
         
-        | Var v ->  st.map.TryFind v 
+        | Var v ->  getVar v st
             
-        | Add(ex1, ex2) ->  let a = arithEval2 ex1 st
-                            let b = arithEval2 ex2 st
+        | Add(ex1, ex2) ->  let a = arithEval ex1 st
+                            let b = arithEval ex2 st
                             
                             Option.bind (fun x ->
                                 Option.bind (fun y -> Some (x + y)
                                 ) b
                             ) a
                             
-        | Mul (ex1, ex2) -> let a = arithEval2 ex1 st
-                            let b = arithEval2 ex2 st
+        | Mul (ex1, ex2) -> let a = arithEval ex1 st
+                            let b = arithEval ex2 st
                             
                             Option.bind(fun x ->
                                 Option.bind(fun y-> Some (x * y)
                                 ) b
                             ) a
-        | Div (ex1, ex2) -> let a = arithEval2 ex1 st
-                            let b = arithEval2 ex2 st
+        | Div (ex1, ex2) -> let a = arithEval ex1 st
+                            let b = arithEval ex2 st
                             
                             Option.bind(fun x ->
                                 Option.bind(fun y -> if y <> 0 then Some (x / y) else None
                                 ) b
                             ) a
-        | Mod (ex1, ex2) -> let a = arithEval2 ex1 st
-                            let b = arithEval2 ex2 st
+        | Mod (ex1, ex2) -> let a = arithEval ex1 st
+                            let b = arithEval ex2 st
                             
                             Option.bind(fun x ->
                                 Option.bind(fun y-> if y <> 0 then Some (x % y) else None 
                                 )b
                             )a
+        | MemRead ex1  -> Some 0 
        
     ;;
     
     let rec boolEval b st : bool option =
         match b with
         | TT ->  Some true
-        | Eq (ex1, ex2) -> let a = arithEval2 ex1 st
-                           let b = arithEval2 ex2 st
+        | Eq (ex1, ex2) -> let a = arithEval ex1 st
+                           let b = arithEval ex2 st
                            
                            Option.bind (fun x ->
                                Option.bind(fun y ->  Some ((=) x y)
                                ) b
                            )a
                         
-        | Lt (ex1, ex2) -> let a = arithEval2 ex1 st 
-                           let b = arithEval2 ex2 st
+        | Lt (ex1, ex2) -> let a = arithEval ex1 st 
+                           let b = arithEval ex2 st
                            
                            Option.bind (fun x ->
                                Option.bind(fun y ->  Some ((<) x y)
@@ -81,7 +82,7 @@ module Interpreter.Eval
         match s with
         | Skip -> Some st 
         | Declare v -> declare v st 
-        | Assign(v, a) -> let b = arithEval2 a st
+        | Assign(v, a) -> let b = arithEval a st
                           match b with
                           | None -> None
                           | Some x -> setVar v x st
@@ -106,5 +107,8 @@ module Interpreter.Eval
                                             | Some stt -> stmntEval (While(guard, s)) stt 
                                          else
                                              Some st
+        | Alloc (str, ex1) -> Some st
+        | MemWrite (ex1, ex2) -> Some st
+        | Free (ex1, ex2) -> Some st                        
     ;;
         

@@ -10,6 +10,7 @@
         <Compile Include="Language.fs" />
         <Compile Include="Programs.fs" />
         <Compile Include="Memory.fs" />
+        <Compile Include="State.fsi" />
         <Compile Include="State.fs" />
         <Compile Include="Eval.fs" />
         <Compile Include="Program.fs" />
