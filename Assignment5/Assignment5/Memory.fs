@@ -1,6 +1,6 @@
 module Interpreter.Memory
 
-    open Interpreter.State
+    //open Interpreter.State
     
     type memory = {
         map: Map<int, int>
@@ -14,7 +14,7 @@ module Interpreter.Memory
         }
     ;;
     
-    let alloc (size: int) (mem: memory)   =
+    let alloc (size: int) (mem: memory) : (memory * int) option   =
         let rec aux currentIndex currentMemoryMap =
             if currentIndex < size + mem.next then
                 aux (currentIndex + 1)  (Map.add currentIndex 0 currentMemoryMap)
@@ -30,25 +30,30 @@ module Interpreter.Memory
     ;;
         
     
-    let free (ptr: int) (size: int) (mem: memory)  =
-        let rec freeUpSpace currentIndex sizeToFreeUp currentMemoryMap =
-            if currentIndex < sizeToFreeUp + size - 1 then
-                freeUpSpace (currentIndex + 1 ) (sizeToFreeUp - 1) (Map.remove currentIndex currentMemoryMap)
+    let free (ptr: int) (size: int) (mem: memory) : memory option =
+        let rec freeUpSpace currentIndex  spaceSize currentMemoryMap =
+            if spaceSize > 0 then
+                if Map.containsKey currentIndex currentMemoryMap then 
+                    freeUpSpace (currentIndex + 1 ) (spaceSize - 1) (Map.remove currentIndex currentMemoryMap)
+                else
+                    None
             else
-                currentMemoryMap
+                Some currentMemoryMap
                 
         if size > 0 then
-            Some ({
-               map = freeUpSpace ptr size mem.map
-               next = mem.next
-            },mem.next)
+            freeUpSpace ptr size mem.map |> Option.bind(fun d ->
+                Some {
+                   map = d
+                   next = mem.next
+                }
+            ) 
         else
            
            None
     ;;
         
-    let setMem (ptr: int) (v: int) (mem: memory) =
-        if mem.map.ContainsKey v then
+    let setMem (ptr: int) (v: int) (mem: memory): memory option  =
+        if mem.map.ContainsKey ptr then
             Some {
                 map = mem.map.Add (ptr, v)
                 next = mem.next
@@ -57,10 +62,6 @@ module Interpreter.Memory
             None
     ;;
         
-    let getMem (ptr: int) (mem: memory) =
-        if mem.map.ContainsKey ptr then
-            mem.map.TryFind ptr
-        else
-            None
-    
+    let getMem (ptr: int) (mem: memory) : int option =
+        mem.map.TryFind ptr
     ;;

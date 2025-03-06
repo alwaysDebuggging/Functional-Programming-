@@ -1,6 +1,7 @@
 module Interpreter.Eval
 
     open Interpreter.Language
+    open Interpreter.Memory
     open Result
     open Language
     open Interpreter.State
@@ -40,8 +41,7 @@ module Interpreter.Eval
                                 Option.bind(fun y-> if y <> 0 then Some (x % y) else None 
                                 )b
                             )a
-        | MemRead ex1  -> Some 0 
-       
+        | MemRead e1  ->  Option.bind (fun y -> getMem y st )  (arithEval e1 st)
     ;;
     
     let rec boolEval b st : bool option =
@@ -107,8 +107,10 @@ module Interpreter.Eval
                                             | Some stt -> stmntEval (While(guard, s)) stt 
                                          else
                                              Some st
-        | Alloc (str, ex1) -> Some st
-        | MemWrite (ex1, ex2) -> Some st
-        | Free (ex1, ex2) -> Some st                        
+        | Alloc (x, e) -> Option.bind ()()
+            
+            
+        | MemWrite (e1, e2) -> Some st
+        | Free (e1, e2) -> Some st                        
     ;;
         
