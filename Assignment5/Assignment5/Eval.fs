@@ -107,10 +107,39 @@ module Interpreter.Eval
                                             | Some stt -> stmntEval (While(guard, s)) stt 
                                          else
                                              Some st
-        | Alloc (x, e) -> Option.bind ()()
+                                             
+        | Alloc (x, e) -> //let size = arithEval e st
+                          //let dec = getVar x st
+                          
+                          //State.alloc x size st
+                          
+                          Option.bind (fun size ->
+                              Option.bind (fun checkDec -> State.alloc x size st
+                              ) (getVar x st)
+                          ) (arithEval e st)
+                          
+                          // Option.bind (fun size ->State.alloc x size st
+                          // ) (arithEval e st)
+                          
             
             
-        | MemWrite (e1, e2) -> Some st
-        | Free (e1, e2) -> Some st                        
+        | MemWrite (e1, e2) -> Option.bind (fun ptr ->
+                                    Option.bind(fun v -> State.setMem ptr v st
+                                    ) (arithEval e2 st)
+                               ) (arithEval e1 st)
+                                
+                               //let ptr = arithEval e1 st
+                               //let v = arithEval e2 st
+                               
+            
+        | Free (e1, e2) -> (*let ptr = arithEval e1 st
+                           let size = arithEval e2 st
+                           
+                            State.free ptr size st*)
+            
+                            Option.bind (fun ptr ->
+                                    Option.bind(fun size -> State.free ptr size st
+                                    ) (arithEval e2 st)
+                            ) (arithEval e1 st)
     ;;
         
