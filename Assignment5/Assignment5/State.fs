@@ -66,8 +66,8 @@ module Interpreter.State
     let free (ptr: int) (size: int) (st: state) : state option =
         Memory.free ptr size st.memory |> Option.bind(fun x -> Some {
             st with memory =  x
-            }
-         )
+             }
+          )
     ;;
     let getMem (ptr: int) (st: state) : int option =
         Memory.getMem ptr st.memory

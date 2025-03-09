@@ -138,8 +138,8 @@ module Interpreter.Eval
                             State.free ptr size st*)
             
                             Option.bind (fun ptr ->
-                                    Option.bind(fun size -> State.free ptr size st
-                                    ) (arithEval e2 st)
+                                  Option.bind(fun size -> State.free ptr size st
+                                  ) (arithEval e2 st)
                             ) (arithEval e1 st)
     ;;
         

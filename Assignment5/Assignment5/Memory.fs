@@ -20,6 +20,7 @@ module Interpreter.Memory
                 aux (currentIndex + 1)  (Map.add currentIndex 0 currentMemoryMap)
             else
                 currentMemoryMap
+                
         if size > 0 then
             Some ({
                map =  aux mem.next mem.map
