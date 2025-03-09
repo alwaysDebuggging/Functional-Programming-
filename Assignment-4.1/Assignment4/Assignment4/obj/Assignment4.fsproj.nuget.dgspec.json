@@ -1,27 +1,33 @@
 {
   "format": 1,
   "restore": {
-    "/Users/jebe/Library/CloudStorage/OneDrive-ITU/teaching/courses/FP2025/Lecture 5/Assignment4/Assignment4/Assignment4.fsproj": {}
+    "C:\\Users\\denni\\OneDrive - ITU\\GitHub\\Functional Programming\\Functional-Programming-\\Assignment-4.1\\Assignment4\\Assignment4\\Assignment4.fsproj": {}
   },
   "projects": {
-    "/Users/jebe/Library/CloudStorage/OneDrive-ITU/teaching/courses/FP2025/Lecture 5/Assignment4/Assignment4/Assignment4.fsproj": {
+    "C:\\Users\\denni\\OneDrive - ITU\\GitHub\\Functional Programming\\Functional-Programming-\\Assignment-4.1\\Assignment4\\Assignment4\\Assignment4.fsproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/jebe/Library/CloudStorage/OneDrive-ITU/teaching/courses/FP2025/Lecture 5/Assignment4/Assignment4/Assignment4.fsproj",
+        "projectUniqueName": "C:\\Users\\denni\\OneDrive - ITU\\GitHub\\Functional Programming\\Functional-Programming-\\Assignment-4.1\\Assignment4\\Assignment4\\Assignment4.fsproj",
         "projectName": "Assignment4",
-        "projectPath": "/Users/jebe/Library/CloudStorage/OneDrive-ITU/teaching/courses/FP2025/Lecture 5/Assignment4/Assignment4/Assignment4.fsproj",
-        "packagesPath": "/Users/jebe/.nuget/packages/",
-        "outputPath": "/Users/jebe/Library/CloudStorage/OneDrive-ITU/teaching/courses/FP2025/Lecture 5/Assignment4/Assignment4/obj/",
+        "projectPath": "C:\\Users\\denni\\OneDrive - ITU\\GitHub\\Functional Programming\\Functional-Programming-\\Assignment-4.1\\Assignment4\\Assignment4\\Assignment4.fsproj",
+        "packagesPath": "C:\\Users\\denni\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\denni\\OneDrive - ITU\\GitHub\\Functional Programming\\Functional-Programming-\\Assignment-4.1\\Assignment4\\Assignment4\\obj\\",
         "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
         "configFilePaths": [
-          "/Users/jebe/.nuget/NuGet/NuGet.Config"
+          "C:\\Users\\denni\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
           "net9.0"
         ],
         "sources": {
-          "/opt/homebrew/Cellar/dotnet/9.0.101/libexec/library-packs": {},
-          "/opt/homebrew/Cellar/dotnet/9.0.101/libexec/sdk/9.0.101/FSharp/library-packs": {},
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\library-packs": {},
+          "C:\\Program Files\\dotnet\\sdk\\8.0.406\\FSharp\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -34,8 +40,7 @@
           "enableAudit": "true",
           "auditLevel": "low",
           "auditMode": "direct"
-        },
-        "SdkAnalysisLevel": "9.0.100"
+        }
       },
       "frameworks": {
         "net9.0": {
@@ -44,7 +49,7 @@
             "FSharp.Core": {
               "include": "Runtime, Compile, Build, Native, Analyzers, BuildTransitive",
               "target": "Package",
-              "version": "[9.0.100, )",
+              "version": "[8.0.403, )",
               "generatePathProperty": true
             }
           },
@@ -64,7 +69,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/opt/homebrew/Cellar/dotnet/9.0.101/libexec/sdk/9.0.101/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.406/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

@@ -2,7 +2,7 @@
   "version": 3,
   "targets": {
     "net9.0": {
-      "FSharp.Core/9.0.100": {
+      "FSharp.Core/8.0.403": {
         "type": "package",
         "compile": {
           "lib/netstandard2.1/FSharp.Core.dll": {
@@ -59,15 +59,15 @@
     }
   },
   "libraries": {
-    "FSharp.Core/9.0.100": {
-      "sha512": "ye8yagHGsH08H2Twno5GRWkSbrMtxK/SWiHuPcF+3nODpW65/VJ8RO0aWxp8n9+KQbmahg90wAEL3TEXjF0r6A==",
+    "FSharp.Core/8.0.403": {
+      "sha512": "ldNIn4IksrJL/X3rF4R/y9pa3RmwkcGYQ3xFMdbJj8dJ9Q49J735m6sMy3MbCK9gj3YoCsxlyFeExCiNDy3gHQ==",
       "type": "package",
-      "path": "fsharp.core/9.0.100",
+      "path": "fsharp.core/8.0.403",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
         "Icon.png",
-        "fsharp.core.9.0.100.nupkg.sha512",
+        "fsharp.core.8.0.403.nupkg.sha512",
         "fsharp.core.nuspec",
         "lib/netstandard2.0/FSharp.Core.dll",
         "lib/netstandard2.0/FSharp.Core.xml",
@@ -104,30 +104,37 @@
   },
   "projectFileDependencyGroups": {
     "net9.0": [
-      "FSharp.Core >= 9.0.100"
+      "FSharp.Core >= 8.0.403"
     ]
   },
   "packageFolders": {
-    "/Users/jebe/.nuget/packages/": {}
+    "C:\\Users\\denni\\.nuget\\packages\\": {},
+    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/Users/jebe/Library/CloudStorage/OneDrive-ITU/teaching/courses/FP2025/Lecture 5/Assignment4/Assignment4/Assignment4.fsproj",
+      "projectUniqueName": "C:\\Users\\denni\\OneDrive - ITU\\GitHub\\Functional Programming\\Functional-Programming-\\Assignment-4.1\\Assignment4\\Assignment4\\Assignment4.fsproj",
       "projectName": "Assignment4",
-      "projectPath": "/Users/jebe/Library/CloudStorage/OneDrive-ITU/teaching/courses/FP2025/Lecture 5/Assignment4/Assignment4/Assignment4.fsproj",
-      "packagesPath": "/Users/jebe/.nuget/packages/",
-      "outputPath": "/Users/jebe/Library/CloudStorage/OneDrive-ITU/teaching/courses/FP2025/Lecture 5/Assignment4/Assignment4/obj/",
+      "projectPath": "C:\\Users\\denni\\OneDrive - ITU\\GitHub\\Functional Programming\\Functional-Programming-\\Assignment-4.1\\Assignment4\\Assignment4\\Assignment4.fsproj",
+      "packagesPath": "C:\\Users\\denni\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\denni\\OneDrive - ITU\\GitHub\\Functional Programming\\Functional-Programming-\\Assignment-4.1\\Assignment4\\Assignment4\\obj\\",
       "projectStyle": "PackageReference",
+      "fallbackFolders": [
+        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+      ],
       "configFilePaths": [
-        "/Users/jebe/.nuget/NuGet/NuGet.Config"
+        "C:\\Users\\denni\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
         "net9.0"
       ],
       "sources": {
-        "/opt/homebrew/Cellar/dotnet/9.0.101/libexec/library-packs": {},
-        "/opt/homebrew/Cellar/dotnet/9.0.101/libexec/sdk/9.0.101/FSharp/library-packs": {},
+        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+        "C:\\Program Files\\dotnet\\library-packs": {},
+        "C:\\Program Files\\dotnet\\sdk\\8.0.406\\FSharp\\library-packs": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
@@ -140,8 +147,7 @@
         "enableAudit": "true",
         "auditLevel": "low",
         "auditMode": "direct"
-      },
-      "SdkAnalysisLevel": "9.0.100"
+      }
     },
     "frameworks": {
       "net9.0": {
@@ -150,7 +156,7 @@
           "FSharp.Core": {
             "include": "Runtime, Compile, Build, Native, Analyzers, BuildTransitive",
             "target": "Package",
-            "version": "[9.0.100, )",
+            "version": "[8.0.403, )",
             "generatePathProperty": true
           }
         },
@@ -170,7 +176,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "/opt/homebrew/Cellar/dotnet/9.0.101/libexec/sdk/9.0.101/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.406/PortableRuntimeIdentifierGraph.json"
       }
     }
   }
