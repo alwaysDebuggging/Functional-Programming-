@@ -19,7 +19,7 @@ module Interpreter.State
     }
     ;;
     let mkState () = {map= Map.empty};;      
-    let declare (x: string) (st: state) :  =
+    let declare (x: string) (st: state)  =
         if not (reservedVariableName x) && validVariableName(x) && not (st.map.ContainsKey x) then
            Some  {
              map = st.map.Add(x,0) // returned a new Map containing the old and the new value
