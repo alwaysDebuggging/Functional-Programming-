@@ -5,8 +5,22 @@ module Interpreter.Eval
     open Result
     open Language
     open Interpreter.State
-       
-    let rec arithEval (a: aexpr) (st: state) =
+    
+    
+    let readFromConsole () = System.Console.ReadLine().Trim();;
+    let tryParseInt (str : string) = System.Int32.TryParse str;;
+
+
+    let rec readInt() =
+        let consoleInput = readFromConsole()
+        let tryParseInput = tryParseInt (consoleInput)
+        let (x,y) = tryParseInput
+        if x = false then 
+            printfn "%s is not an integer: " consoleInput 
+            readInt()
+        else 
+           y;;
+    let rec arithEval (a: aexpr) (st: state) : int option =
         match a with
         | Num int -> Some int
         
@@ -42,9 +56,22 @@ module Interpreter.Eval
                                 )b
                             )a
         | MemRead e1  ->  Option.bind (fun y -> getMem y st )  (arithEval e1 st)
-    ;;
-    
-    let rec boolEval b st : bool option =
+        
+        | Random  -> Some(State.random st)
+        
+        | Read -> let a = readInt()
+                  Some(
+                    a   
+                  )
+        | Cond (b, a1, a2) -> let cond = boolEval b st
+                              match cond with
+                              | Some true -> arithEval a1 st 
+
+                              | Some _ -> arithEval a2 st 
+                                         
+                              | None -> None
+                                          
+    and boolEval b st : bool option =
         match b with
         | TT ->  Some true
         | Eq (ex1, ex2) -> let a = arithEval ex1 st
@@ -141,5 +168,8 @@ module Interpreter.Eval
                                   Option.bind(fun size -> State.free ptr size st
                                   ) (arithEval e2 st)
                             ) (arithEval e1 st)
+
+        | Print(aexprs, s) -> failwith "todo"
     ;;
-        
+    
+   

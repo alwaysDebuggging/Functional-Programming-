@@ -19,15 +19,26 @@ module Interpreter.State
     type state = {
         map: Map<string, int>
         memory: Memory.memory
+        rng: System.Random
     }
     ;;
     
-    let mkState (memSize: int) =
+    let mkState (memSize: int) (oseed: int option) =
         {
             map = Map.empty
             memory =  Memory.empty memSize
+            rng = match oseed with
+                           | Some x -> System.Random(x)
+                           | None -> System.Random()
+
         }
-    ;;      
+    ;;
+    
+    let random (st: state) : int =
+        st.rng.Next()
+    ;;
+        
+
     let declare (x: string) (st: state) =
         if not (reservedVariableName x) && validVariableName(x) && not (st.map.ContainsKey x) then
            Some  {
