@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "ad1Fm6ZdqgY=",
+  "success": true,
+  "projectFilePath": "C:\\Users\\denni\\OneDrive - ITU\\GitHub\\Functional Programming\\Functional-Programming-\\Assignment-6\\Assignment6\\Assignment6.fsproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\denni\\.nuget\\packages\\fsharp.core\\9.0.100\\fsharp.core.9.0.100.nupkg.sha512"
+  ],
+  "logs": []
+}
