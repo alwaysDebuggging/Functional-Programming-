@@ -174,9 +174,10 @@ module Interpreter.Eval
     
     
    let mergeStrings (es: aexpr) (s: String) (st: state) : String option =
-       //make helper fuction maybe??
+       let mergeHelper _, _, acc = 
+           qweqwe
        
-       //mergeString ()
+       mergeHelper
    ;;
    
    
