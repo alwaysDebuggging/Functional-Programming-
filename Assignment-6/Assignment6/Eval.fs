@@ -172,4 +172,14 @@ module Interpreter.Eval
         | Print(aexprs, s) -> failwith "todo"
     ;;
     
+    
+   let mergeStrings (es: aexpr) (s: String) (st: state) : String option =
+       //make helper fuction maybe??
+       
+       //mergeString ()
+   ;;
+   
+   
+   
+   let split (s1 : string) (s2 : string) = s2 |> s1.Split |> Array.toList;;
    
