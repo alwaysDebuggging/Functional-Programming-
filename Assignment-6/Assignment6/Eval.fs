@@ -104,6 +104,39 @@ module Interpreter.Eval
                      
                      a |> Option.bind(fun x -> Some (not x))
     ;;
+
+
+
+    let split (s1 : string) (s2 : string) = s2 |> s1.Split |> Array.toList;;
+
+    
+    let mergeStrings (es: aexpr list) (s: string) (st: state) : string option =
+        let rec mergeHelper (es: aexpr list) (s: string list) (acc: string): string option = 
+            match es, s with 
+            | [], [headS] -> Some (acc + headS)
+            | head_es :: tail_es, headS :: tail_S ->
+                match arithEval head_es st with 
+                | Some y -> 
+                    mergeHelper tail_es tail_S (acc + headS + (string) y)
+                | None -> None 
+            | _, _ -> None
+        mergeHelper es (split s "%") ""
+    ;;
+
+    let mergeStrings2 (es: aexpr list) (s: string) (st: state) : string option =
+        let rec mergeHelper2 (es: aexpr list) (s: string list) c : string option = 
+            match es, s with 
+            | [], [headS] -> Some (c headS)
+            | head_es :: tail_es, headS :: tail_S ->
+                match arithEval head_es st with 
+                | Some y -> 
+                    mergeHelper2 tail_es tail_S (fun r -> c (headS + (string) y + r))
+                | None -> None 
+            | _, _ -> None
+        mergeHelper2 es (split s "%") id
+    ;;
+    
+
  
     let rec stmntEval (s: stmnt) (st: state) : state option =
         match s with
@@ -169,18 +202,14 @@ module Interpreter.Eval
                                   ) (arithEval e2 st)
                             ) (arithEval e1 st)
 
-        | Print(aexprs, s) -> failwith "todo"
+        | Print(es, s) -> 
+            let endString = mergeStrings es s st
+            match endString with 
+            | Some x -> 
+                printfn "%A" x
+                Some st
+            | None -> None
+                
     ;;
+
     
-    
-   let mergeStrings (es: aexpr) (s: String) (st: state) : String option =
-       let mergeHelper _, _, acc = 
-           qweqwe
-       
-       mergeHelper
-   ;;
-   
-   
-   
-   let split (s1 : string) (s2 : string) = s2 |> s1.Split |> Array.toList;;
-   
