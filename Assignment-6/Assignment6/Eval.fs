@@ -203,12 +203,16 @@ module Interpreter.Eval
                             ) (arithEval e1 st)
 
         | Print(es, s) -> 
-            let endString = mergeStrings es s st
+            (*let endString = mergeStrings es s st
             match endString with 
             | Some x -> 
                 printfn "%A" x
                 Some st
-            | None -> None
+            | None -> None*)
+            Option.bind(fun n -> 
+                printfn "%A" n 
+                Some st 
+            )(mergeStrings es s st)
                 
     ;;
 

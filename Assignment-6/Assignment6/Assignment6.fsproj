@@ -8,6 +8,7 @@
     <ItemGroup>
       <Compile Include="Language.fs" />
       <Compile Include="Programs.fs" />
+      <Compile Include="Memory.fsi" />
       <Compile Include="Memory.fs" />
       <Compile Include="State.fsi" />
       <Compile Include="State.fs" />
