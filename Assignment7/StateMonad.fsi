@@ -31,13 +31,13 @@ module Interpreter.StateMonad
 
     val free: int ->  int -> unit stateMonad 
 
-    val setMem:  int -> int -> unit stateMonad 
+    val setMem: int -> int -> unit stateMonad 
 
     val getMem: int -> int stateMonad 
 
     val random: int stateMonad
 
-    val evalState:  'a stateMonad -> state -> 'a option 
+    val evalState: state -> 'a stateMonad -> 'a option 
     
         
         

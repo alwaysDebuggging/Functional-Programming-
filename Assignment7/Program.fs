@@ -10,9 +10,9 @@ open Interpreter.StateMonad
 
 
 
-let test =   evalState(declare "x" >>>= setVar "x" 42 >>>= getVar "x") (mkState 0 None Map.empty)
+//let test =   evalState(declare "x" >>>= setVar "x" 42 >>>= getVar "x") (mkState 0 None Map.empty)
 
-printfn "%A" test
+//printfn "%A" test
 
 (*let runProgram prog =
     42 |>

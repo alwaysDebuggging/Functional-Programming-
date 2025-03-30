@@ -1,10 +1,10 @@
 module Interpreter.Eval
 
-open Interpreter.Language
+
 open Interpreter.Memory
 open Result
 open Language
-open Interpreter.State
+open StateMonad
 
 
 let readFromConsole () = System.Console.ReadLine().Trim()
@@ -22,187 +22,302 @@ let rec readInt () =
     else
         y
 
-let rec arithEval (a: aexpr) (st: state) : int option =
-    match a with
-    | Num int -> Some int
+type StateBuilder() =  
+    member this.Bind(f, x) = (>>=) f x  
+    member this.Return(x) = ret x  
+    member this.ReturnFrom(x) = x  
+    member this.Combine(a, b) = a >>= (fun _ -> b) 
+      
+let eval = StateBuilder()
 
-    | Var v -> getVar v st
+
+let rec arithEval (a: aexpr) : int stateMonad =
+    match a with
+    | Num v -> ret v
+
+    | Var v -> getVar v >>= fun a->
+        ret a
 
     | Add(ex1, ex2) ->
-        let a = arithEval ex1 st
-        let b = arithEval ex2 st
+        arithEval ex1 >>= fun a ->
+        arithEval ex2 >>= fun b ->
 
-        Option.bind (fun x -> Option.bind (fun y -> Some(x + y)) b) a
+        ret ((+) a b)
 
     | Mul(ex1, ex2) ->
-        let a = arithEval ex1 st
-        let b = arithEval ex2 st
+        arithEval ex1 >>= fun a ->
+        arithEval ex2 >>= fun b ->
 
-        Option.bind (fun x -> Option.bind (fun y -> Some(x * y)) b) a
+        ret (a * b)
+
     | Div(ex1, ex2) ->
-        let a = arithEval ex1 st
-        let b = arithEval ex2 st
+        arithEval ex1 >>= fun a ->
+        arithEval ex2 >>= fun b ->
 
-        Option.bind (fun x -> Option.bind (fun y -> if y <> 0 then Some(x / y) else None) b) a
+       if b <> 0  then ret ((/) a b) else fail 
+
     | Mod(ex1, ex2) ->
-        let a = arithEval ex1 st
-        let b = arithEval ex2 st
+        arithEval ex1 >>= fun a ->
+        arithEval ex2 >>= fun b ->
 
-        Option.bind (fun x -> Option.bind (fun y -> if y <> 0 then Some(x % y) else None) b) a
-    | MemRead e1 -> Option.bind (fun y -> getMem y st) (arithEval e1 st)
+        if b <> 0  then ret ((%) a b) else fail
 
-    | Random -> Some(State.random st)
+    | MemRead e1 -> 
+        arithEval e1 >>= fun a ->
+        getMem a >>= fun b ->
+
+        ret b
+
+    | Random -> 
+        random >>= fun a ->
+
+        ret a
 
     | Read ->
         let a = readInt ()
-        Some(a)
-    | Cond(b, a1, a2) ->
-        let cond = boolEval b st
+        ret a
 
-        match cond with
-        | Some true -> arithEval a1 st
+    | Cond(b, a1, a2) -> 
+        boolEval b >>= fun bl ->
+            if bl then
+                arithEval a1 >>= fun x -> ret x
+            else 
+                arithEval a2 >>= fun x -> ret x
 
-        | Some _ -> arithEval a2 st
-
-        | None -> None
-
-and boolEval b st : bool option =
+and boolEval (b ) : bool stateMonad =
     match b with
-    | TT -> Some true
+    | TT -> ret true
     | Eq(ex1, ex2) ->
-        let a = arithEval ex1 st
-        let b = arithEval ex2 st
+        arithEval ex1  >>= fun x ->
+        arithEval ex2  >>= fun y ->
 
-        Option.bind (fun x -> Option.bind (fun y -> Some((=) x y)) b) a
+        ret ((=) x y)
 
     | Lt(ex1, ex2) ->
-        let a = arithEval ex1 st
-        let b = arithEval ex2 st
+        arithEval ex1 >>= fun x ->
+        arithEval ex2 >>= fun y ->
 
-        Option.bind (fun x -> Option.bind (fun y -> Some((<) x y)) b) a
+        ret ((<) x y)
 
     | Conj(ex1, ex2) ->
-        let a = boolEval ex1 st
-        let b = boolEval ex2 st
+        boolEval ex1 >>= fun x ->
+        boolEval ex2 >>= fun y ->
 
-        Option.bind
-            (fun x -> Option.bind (fun y -> Some((&&) x y)) b //(boolEval ex2 st)
-            )
-            a //(boolEval ex1 st)
+        ret ((&&) x  y)
 
-    //Some ((&&) a b)
-
-    | Not ex1 ->
-        let a = boolEval ex1 st
-
-        a |> Option.bind (fun x -> Some(not x))
-
+    | Not ex1 -> boolEval ex1 >>= fun x -> 
+        ret (not x)
 
 
 let split (s1: string) (s2: string) = s2 |> s1.Split |> Array.toList
 
 
-let mergeStrings (es: aexpr list) (s: string) (st: state) : string option =
-    let rec mergeHelper (es: aexpr list) (s: string list) (acc: string) : string option =
+let mergeStrings (es: aexpr list) (s: string) : string stateMonad =
+    let rec mergeHelper (es: aexpr list) (s: string list) (acc: string) : string stateMonad =
         match es, s with
-        | [], [ headS ] -> Some(acc + headS)
+        | [], [ headS ] -> ret (acc + headS)
         | head_es :: tail_es, headS :: tail_S ->
-            match arithEval head_es st with
-            | Some y -> mergeHelper tail_es tail_S (acc + headS + (string) y)
-            | None -> None
-        | _, _ -> None
+            arithEval head_es >>= fun x ->
+            mergeHelper tail_es tail_S (acc + headS + (string) x)
+        | _, _ -> fail
 
     mergeHelper es (split s "%") ""
 
-let mergeStrings2 (es: aexpr list) (s: string) (st: state) : string option =
-    let rec mergeHelper2 (es: aexpr list) (s: string list) c : string option =
-        match es, s with
-        | [], [ headS ] -> Some(c headS)
-        | head_es :: tail_es, headS :: tail_S ->
-            match arithEval head_es st with
-            | Some y -> mergeHelper2 tail_es tail_S (fun r -> c (headS + (string) y + r))
-            | None -> None
-        | _, _ -> None
-
-    mergeHelper2 es (split s "%") id
-
-
-
-let rec stmntEval (s: stmnt) (st: state) : state option =
+let rec stmntEval (s: stmnt) :  unit stateMonad =
     match s with
-    | Skip -> Some st
-    | Declare v -> declare v st
-    | Assign(v, a) ->
-        let b = arithEval a st
+    | Skip -> 
+        eval {
+            return ()    
+        }
 
-        match b with
-        | None -> None
-        | Some x -> setVar v x st
+    | Declare v -> 
+        eval {
+            //let! a = declare v
+
+            return! declare v
+        }
+
+    | Assign(v, a) ->
+        eval {
+            let! b = arithEval a
+            //do! setVar v b
+            return! setVar v b
+        }
 
     | Seq(s1, s2) ->
-        let b = stmntEval s1 st
+        eval {
+            do! stmntEval s1
+            return! stmntEval s2
+        }
 
-        match b with
-        | None -> None
-        | Some stt -> stmntEval s2 stt
 
     | If(gaurd, s1, s2) ->
-        let b = boolEval gaurd st
-
-        match b with
-        | None -> None
-        | Some x -> if x = true then stmntEval s1 st else stmntEval s2 st
+        eval {
+            let! b = boolEval gaurd
+            if b then 
+                return! stmntEval s1 
+    
+            else 
+                return! stmntEval s2 
+        }
 
     | While(guard, s) ->
-        let b = boolEval guard st
+        eval {
+            let! b = boolEval guard
 
-        match b with
-        | None -> None
-        | Some x ->
-            if x = true then
-                let c = stmntEval s st
+            if b = true then 
+                do! stmntEval s   
+                return! stmntEval (While(guard, s))
+            else  
+                return ()
+        }
 
-                match c with
-                | None -> None
-                | Some stt -> stmntEval (While(guard, s)) stt
-            else
-                Some st
+    | Alloc(x, e) -> 
+        eval {
+            let! size = arithEval e 
+            //let! b = getVar x 
+            let! _ = getVar x 
 
-    | Alloc(x, e) -> //let size = arithEval e st
-        //let dec = getVar x st
-
-        //State.alloc x size st
-
-        Option.bind (fun size -> Option.bind (fun checkDec -> State.alloc x size st) (getVar x st)) (arithEval e st)
-
-    // Option.bind (fun size ->State.alloc x size st
-    // ) (arithEval e st)
-
-
+            return! alloc x size
+        }
 
     | MemWrite(e1, e2) ->
-        Option.bind (fun ptr -> Option.bind (fun v -> State.setMem ptr v st) (arithEval e2 st)) (arithEval e1 st)
+        eval {
+            let! ptr = arithEval e1
 
-    //let ptr = arithEval e1 st
-    //let v = arithEval e2 st
+            let! v = arithEval e2 
 
+            return! setMem ptr v
+        }
+        
 
-    | Free(e1, e2) -> (*let ptr = arithEval e1 st
-                           let size = arithEval e2 st
-                           
-                            State.free ptr size st*)
+    | Free(e1, e2) -> 
+        eval {
+            let! ptr = arithEval e1
 
-        Option.bind (fun ptr -> Option.bind (fun size -> State.free ptr size st) (arithEval e2 st)) (arithEval e1 st)
+            let! size = arithEval e2 
+
+            return! free ptr size
+        }
+
+        
 
     | Print(es, s) ->
-        (*let endString = mergeStrings es s st
-            match endString with 
-            | Some x -> 
-                printfn "%A" x
-                Some st
-            | None -> None*)
-        Option.bind
-            (fun n ->
-                printfn "%A" n
-                Some st)
-            (mergeStrings es s st)
+        eval {
+            let! n = mergeStrings es s 
+
+            return printfn "%A" n
+
+        }
+        
+;;
+
+
+let rec arithEval2 (a: aexpr) : int stateMonad =
+    match a with
+    | Num v -> ret v
+
+    | Var v ->  
+        eval{
+            let! a = getVar v
+            return a
+        }
+
+
+    | Add(ex1, ex2) ->
+        eval{
+            let! a = arithEval2 ex1 
+            let! b = arithEval2 ex2
+            return (+) a b
+        }
+
+    | Mul(ex1, ex2) ->
+        eval{
+            let! a = arithEval2 ex1 
+            let! b = arithEval2 ex2
+            return (a * b)
+        }
+
+    | Div(ex1, ex2) ->
+        eval{
+            let! a = arithEval2 ex1 
+            let! b = arithEval2 ex2
+
+            if b <> 0  then return ((/) a b) else return! fail 
+        }
+
+    | Mod(ex1, ex2) ->
+        eval{
+            let! a = arithEval2 ex1 
+            let! b = arithEval2 ex2
+
+            if b <> 0  then return ((%) a b) else return! fail 
+        }
+
+    | MemRead ex1 -> 
+        eval{
+            let! a = arithEval2 ex1
+            let! b = getMem a
+
+            return b
+        }
+
+    | Random -> 
+        eval{
+            let! a = random
+            return a
+        }
+
+    | Read ->
+        eval{
+            let a = readInt ()
+            //let! b = a
+            return a
+        }
+
+    | Cond(b, a1, a2) -> 
+        eval{
+            let! c = boolEval2 b
+
+            if c then
+                let! a = arithEval2 a1
+                return a 
+            else 
+                let! b = arithEval2 a2
+                return b 
+        }
+
+and boolEval2 (b ) : bool stateMonad =
+    match b with
+    | TT -> ret true
+    | Eq(ex1, ex2) ->
+        eval{
+            let! a = arithEval2 ex1
+            let! b = arithEval2 ex2
+            
+            return ((=) a b) 
+        }
+
+    | Lt(ex1, ex2) ->
+        eval{
+                let! a = arithEval2 ex1
+                let! b = arithEval2 ex2
+                
+                return ((<) a b) 
+        }
+    
+
+    | Conj(ex1, ex2) ->
+        eval{
+                let! a = boolEval2 ex1
+                let! b = boolEval2 ex2
+                
+                return ((&&) a b) 
+        }
+
+    | Not ex1 -> 
+        eval{
+                let! a = boolEval2 ex1
+                return (not a) 
+        }
+    

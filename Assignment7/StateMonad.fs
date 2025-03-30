@@ -51,7 +51,7 @@ let getMem (ptr: int) : int stateMonad =
 
 let random: int stateMonad = SM(fun st -> Some(State.random st, st))
 
-let evalState (SM f) (st: state) : 'a option =
+let evalState (st: state) (SM f)  : 'a option =
     match f st with
     | Some(v, st) -> Some(v)
     | None -> None
