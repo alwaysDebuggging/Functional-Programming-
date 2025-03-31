@@ -12,26 +12,26 @@
     open JParsec.TextParser             // Example parser combinator library. Use for CodeJudge.
     // open FParsecLight.TextParser     // Industrial parser-combinator library. Use for Scrabble Project.
     
-    let pIntToChar  = pstring "not implemented"
-    let pPointValue = pstring "not implemented"
+    let pIntToChar  = pstring "read"
+    let pPointValue = pstring "random"
 
-    let pCharToInt  = pstring "not implemented"
+    let pCharToInt  = pstring "true"
     let pToUpper    = pstring "not implemented"
     let pToLower    = pstring "not implemented"
     let pCharValue  = pstring "not implemented"
 
-    let pTrue       = pstring "not implemented"
-    let pFalse      = pstring "not implemented"
+    let pTrue       = pstring "true"
+    let pFalse      = pstring "false"
     let pIsDigit    = pstring "not implemented"
     let pIsLetter   = pstring "not implemented"
     let pIsVowel   = pstring "not implemented"
 
-    let pif       = pstring "not implemented"
+    let pif       = pstring "if"
     let pthen     = pstring "not implemented"
-    let pelse     = pstring "not implemented"
-    let pwhile    = pstring "not implemented"
+    let pelse     = pstring "else"
+    let pwhile    = pstring "while"
     let pdo       = pstring "not implemented"
-    let pdeclare  = pstring "not implemented"
+    let pdeclare  = pstring "declare"
 
     let whitespaceChar = pstring "not implemented"
     let pletter        = pstring "not implemented"
