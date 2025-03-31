@@ -21,44 +21,23 @@ module Interpreter.StateMonad
     val (>>>=) : 'a stateMonad -> 'b stateMonad -> 'b stateMonad
     
     // Fix these signatures
-    val random : 'a -> 'b
+   val declare: string -> unit stateMonad 
+    
+    val setVar: string -> int -> unit stateMonad 
 
-    val declare : 'a -> 'b
-    val getVar : 'a -> 'b
-    val setVar : 'a -> 'b
+    val getVar: string-> int stateMonad 
+        
+    val alloc: string -> int -> unit stateMonad 
 
-    val alloc : 'a -> 'b
-    val free : 'a -> 'b
-    val getMem : 'a -> 'b
-    val setMem : 'a -> 'b
-    
-    val push : 'a -> 'b
-    val pop : 'a -> 'b
-    
-    val evalState : 'a -> 'b
+    val free: int ->  int -> unit stateMonad 
 
-    
-    // Red Exercises
-    (*
-    
-    type stateContMonad<'a, 'r>
-    
-    val ret  : 'a -> stateContMonad<'a, 'r>
-    
-    val fret : int -> stateContMonad<unit, 'r>
-    val fcall : string -> int list -> (stmnt -> stateContMonad<unit, 'r>) -> stateContMonad<int, 'r>
-    
-    // Green
-    // val fail : stateContMonad<'a, 'r>
-    
-    // Yellow
-    val fail : error -> stateContMonad<'a, 'r>
- 
-    val (>>=) : stateContMonad<'a, 'r> -> ('a -> stateContMonad<'b, 'r>) -> stateContMonad<'b, 'r>
-    val (>>>=) : stateContMonad<'a, 'r> -> stateContMonad<'b, 'r> -> stateContMonad<'b, 'r>
+    val setMem: int -> int -> unit stateMonad 
 
+    val getMem: int -> int stateMonad 
 
- *)
+    val random: int stateMonad
+
+    val evalState: state -> 'a stateMonad -> 'a option 
     
     
     
