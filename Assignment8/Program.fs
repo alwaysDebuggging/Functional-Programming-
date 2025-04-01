@@ -1,6 +1,7 @@
 ﻿// For more information see https://aka.ms/fsharp-console-apps
 open Interpreter
 open Interpreter.Parser
+open Interpreter.JParsec
 
 let rec parseArgs =
     function
@@ -11,17 +12,7 @@ let rec parseArgs =
 
 [<EntryPoint>]
 let main args =
-    let m = args.[2..] |> Array.toList |> parseArgs
- 
-    System.IO.File.ReadAllText(args.[1]) |>
-    runProgramParser |>
-    Result.map
-        (fun (prog, body) ->
-            Eval.stmntEval body |>
-            StateMonad.evalState
-                (State.mkState
-                     (m |> Map.tryFind "--memSize" |> Option.defaultValue 0)
-                     (m |> Map.tryFind "--seed")
-                     prog)) |>
-    printfn "\n\n%A"
+    let aa = run (parenthesise (JParsec.TextParser.pint32))  "(    5    )"
+
+    printfn "%A" aa
     0
