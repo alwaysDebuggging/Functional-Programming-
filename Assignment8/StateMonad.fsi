@@ -1,6 +1,7 @@
 module Interpreter.StateMonad
 
     open Language
+    open State
     
     // Green and Yellow exercises (remove up until Red exercises if doing Red, but start with Green or Yellow regardless)
 
@@ -21,7 +22,7 @@ module Interpreter.StateMonad
     val (>>>=) : 'a stateMonad -> 'b stateMonad -> 'b stateMonad
     
     // Fix these signatures
-   val declare: string -> unit stateMonad 
+    val declare: string -> unit stateMonad 
     
     val setVar: string -> int -> unit stateMonad 
 
