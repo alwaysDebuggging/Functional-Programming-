@@ -2,6 +2,10 @@
 open Interpreter
 open Interpreter.Parser
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+open Interpreter.JParsec.TextParser
+>>>>>>> Stashed changes
 =======
 open Interpreter.JParsec.TextParser
 >>>>>>> Stashed changes
@@ -15,6 +19,7 @@ let rec parseArgs =
 
 [<EntryPoint>]
 let main args =
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
     let m = args.[2..] |> Array.toList |> parseArgs
  
@@ -31,9 +36,15 @@ let main args =
     printfn "\n\n%A"
     0
 =======
+=======
+>>>>>>> Stashed changes
     let aa =  run (binop (pchar '+') pint32 pint32 |>>
                  (fun (a, b) -> a + b)) "5 +  7"  |> printfn "%A"
 
     aa
+<<<<<<< Updated upstream
+    0
+>>>>>>> Stashed changes
+=======
     0
 >>>>>>> Stashed changes
