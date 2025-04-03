@@ -35,9 +35,6 @@
     let spaces = many pwhitespaceChar //pwhitespaceChar  |>> fun x -> [x]
     let spaces1 = many1 pwhitespaceChar //pwhitespaceChar |>> fun x -> [x] // or this many1 pwhitespaceChar or this many pwhitespaceChar
 
-    let spaces         = pchar '_' |>> fun x -> [x]
-    let spaces1        = pchar '_' |>> fun x -> [x]
-
     let (.>*>.) p1 p2 = p1 .>> spaces .>>. p2
     let (.>*>) p1 p2 = p1 .>> spaces .>> p2
     let (>*>.) p1 p2 = p1 .>> spaces >>. p2
@@ -47,11 +44,11 @@
 
     let toString (lst: char list) = new string [|for s in lst -> s|]
     
-    let parseString : Result<string, string> = 
-        pletter 
+    // let parseString : Result<string, string> = 
+    //     pletter 
 
-        str.Replace(, <with this substring>)
-        new string [|for c in chars -> c|]
+    //     str.Replace(, <with this substring>)
+    //     new string [|for c in chars -> c|]
 
     let pid  = 
         pletter <|> pchar '_' .>>.  many(palphanumeric <|> pchar '_') |>> fun (ch, chlst) -> toString (ch :: chlst)
