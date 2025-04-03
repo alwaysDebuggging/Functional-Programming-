@@ -48,6 +48,7 @@
 
     let pid = pstring "not implemented"
 
+<<<<<<< Updated upstream
     
     let unop _ = failwith "not implemented"
     let binop _ = failwith "not implemented"
@@ -55,12 +56,43 @@
     let TermParse, tref = createParserForwardedToRef<aexpr>()
     let ProdParse, pref = createParserForwardedToRef<aexpr>()
     let AtomParse, aref = createParserForwardedToRef<aexpr>()
+=======
+let parenthesise p = pchar '(' >*>. p .>*> pchar ')'
+let curlybrackets p = pchar '{' >*>. p .>*> pchar '}'
+
+let toString (lst: char list) = new string [|for s in lst -> s|]
+let parseString : Result<string, string> = 
+    pletter 
+
+    str.Replace(, <with this substring>)
+    new string [|for c in chars -> c|]
+
+let pid  = 
+    pletter <|> pchar '_' .>>.  many(palphanumeric <|> pchar '_') |>> fun (ch, chlst) -> toString (ch :: chlst)
+
+    // pletter <|> pchar '_' .>>.  many(palphanumeric <|> pchar '_') |>> fun (ch, chlst: char list) -> new string [|for s in ch::chlst -> s|]
+
+    
+    // let check = pletter <|> pchar '_' .>>.  many(palphanumeric <|> pchar '_')
+
+    // let tost = check |>> fun (c, cs: char list) -> c::cs
+
+    // let mapCC   =  tost |>> fun ls -> 
+    // mapCC
+
+// run pid "x1"                                x                       [1]                                   x       [1]            
+>>>>>>> Stashed changes
 
     let AddParse = binop (pchar '+') ProdParse TermParse |>> Add <?> "Add"
     do tref := choice [AddParse; ProdParse]
 
+<<<<<<< Updated upstream
     let MulParse = binop (pchar '*') AtomParse ProdParse |>> Mul <?> "Mul"
     do pref := choice [MulParse; AtomParse]
+=======
+let unop op a  = op >*>. a
+let binop op a b = a .>*> op .>*>. b  
+>>>>>>> Stashed changes
 
     let NParse   = pint32 |>> Num <?> "Int"
     let ParParse = parenthesise TermParse
