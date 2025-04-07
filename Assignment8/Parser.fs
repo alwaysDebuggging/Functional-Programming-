@@ -9,7 +9,7 @@
 
     *)
 
-    open JParsec.TextParser             // Example parser combinator library. Use for CodeJudge.
+    open FParsecLight.TextParser            // Example parser combinator library. Use for CodeJudge.
     // open FParsecLight.TextParser     // Industrial parser-combinator library. Use for Scrabble Project.                              x                       [1]                                   x       [1]            
 
 
@@ -41,14 +41,13 @@
 
     let parenthesise p = pchar '(' >*>. p .>*> pchar ')'
     let curlybrackets p = pchar '{' >*>. p .>*> pchar '}'
+    let squareBrackets p = pchar '[' >*>. p .>*> pchar ']'
 
     let toString (lst: char list) = new string [|for s in lst -> s|]
     
-    // let parseString : Result<string, string> = 
-    //     pletter 
-
-    //     str.Replace(, <with this substring>)
-    //     new string [|for c in chars -> c|]
+    let parseString = between (pchar '"') (pchar '"') (many(satisfy(fun chr -> chr <> '"'))) |>> toString 
+                        |>> fun (str: string) ->  str.Replace("\\n", "\n").Replace("\\t", "\t")
+        
 
     let pid  = 
         pletter <|> pchar '_' .>>.  many(palphanumeric <|> pchar '_') |>> fun (ch, chlst) -> toString (ch :: chlst)
@@ -73,21 +72,97 @@
     let TermParse, tref = createParserForwardedToRef<aexpr>()
     let ProdParse, pref = createParserForwardedToRef<aexpr>()
     let AtomParse, aref = createParserForwardedToRef<aexpr>()
+
+    // 8.10 bool
+    let BTermParse, Btref = createParserForwardedToRef<bexpr>()
+    let BAtomParse, Baref = createParserForwardedToRef<bexpr>()
     
+   
 
+    //Level: 1
+    //let condExpression= 
+
+
+
+    //Level: 2
     let AddParse = binop (pchar '+') ProdParse TermParse |>> Add <?> "Add"
-    do tref := choice [AddParse; ProdParse]
 
+    let SubParse = binop (pchar '-') ProdParse TermParse |>> (fun (a,  b) -> Add (a, Mul (b, Num -1))) <?> "Sub"
+    do tref := choice [AddParse; SubParse; ProdParse]
+
+
+    //Level: 3
     let MulParse = binop (pchar '*') AtomParse ProdParse |>> Mul <?> "Mul"
-    do pref := choice [MulParse; AtomParse]
+
+    let DivParse = binop (pchar '/') AtomParse ProdParse |>> Div <?> "Div"
+
+    let ModParse = binop (pchar '%') AtomParse ProdParse |>> Mod <?> "Mod"
+    do pref := choice [MulParse; DivParse; ModParse; AtomParse]
+
+
+    //Level: 4
+    let NegetiveNumber = unop (pchar '-') AtomParse |>> (fun n -> Mul(n, Num -1)) <?> "NegationNumber"
 
     let NParse   = pint32 |>> Num <?> "Int"
+
     let ParParse = parenthesise TermParse
-    do aref := choice [NParse; ParParse]
 
-    let paexpr = pstring "not implemented" |>> (fun _ -> Num 42)
+    let VariableParse = pid |>> Var <?> "Variable"
+    
+    let ReadParse = pread |>> (fun _ -> Read) <?> "Read"
 
-    let pbexpr = pstring "not implemented" |>> (fun _ -> TT)
+    let MemRead = squareBrackets TermParse <?> "MemRead"
+
+    let RandomNumbers = prandom |>> (fun _ -> Random) <?> "RandomNumber"
+
+    do aref := choice [NegetiveNumber; NParse; ParParse; VariableParse; ReadParse; RandomNumbers;]
+
+    let paexpr = TermParse
+
+
+    //Level-1
+
+    let ConjParse = binop (pstring "/\\") BAtomParse BTermParse |>> Conj <?> "Conj"
+
+    let OrParse = binop (pstring "\\/") BAtomParse BTermParse |>> (fun (b1, b2) -> b1 .||. b2) <?> "Conj"
+
+    let EqualParse = binop (pchar '=') AtomParse TermParse |>> Eq <?> "Equal"
+
+    let NotEqualToParse = binop (pstring "<>") AtomParse TermParse |>> (fun (a, b) -> a .<>. b) <?> "NotEqualTo"
+
+    let LessThanParse = binop (pchar '<') AtomParse TermParse |>> (fun (a, b ) -> a .<. b) <?> "LessThan"
+
+    let GreaterThanParse = binop (pchar '>') AtomParse TermParse |>> (fun (a, b ) -> a .>. b) <?> "GreaterThan"
+
+    let LessOrEqualToParse = binop (pstring "<=") AtomParse TermParse |>> (fun (a, b ) -> a .<=. b) <?> "LessOrEqualToParse"
+
+    let LessOrEqualToParse = binop (pstring "<=") AtomParse TermParse |>> (fun (a, b ) -> a .<=. b) <?> "LessOrEqualToParse"
+
+
+
+
+
+    let TrueParse = ptrue |>> (fun _ -> TT) <?> "True"
+
+    let NotTrueParse = pfalse |>> (fun _ -> FF) <?> "NotTrue"
+
+
+
+
+
+
+
+
+
+
+
+    let pbexpr = BTermParse
+
+
+
+
+
+
 
     let pstmnt = pstring "not implemented" |>> (fun _ -> Skip)
     

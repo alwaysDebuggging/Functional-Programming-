@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "pqPgy2799rA=",
+  "dgSpecHash": "Fx3aiAgyo2Y=",
   "success": true,
-  "projectFilePath": "C:\\Users\\denni\\OneDrive - ITU\\GitHub\\Functional_Prog\\Functional-Programming-\\Assignment8\\Assignment8.fsproj",
+  "projectFilePath": "C:\\Users\\denni\\OneDrive - ITU\\GitHub\\Func_Prog\\Functional-Programming-\\Assignment8\\Assignment8.fsproj",
   "expectedPackageFiles": [
     "C:\\Users\\denni\\.nuget\\packages\\fparsec\\1.1.1\\fparsec.1.1.1.nupkg.sha512",
     "C:\\Users\\denni\\.nuget\\packages\\fsharp.core\\8.0.403\\fsharp.core.8.0.403.nupkg.sha512"

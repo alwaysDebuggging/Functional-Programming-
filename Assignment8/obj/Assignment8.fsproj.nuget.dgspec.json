@@ -1,24 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\denni\\OneDrive - ITU\\GitHub\\Functional_Prog\\Functional-Programming-\\Assignment8\\Assignment8.fsproj": {}
+    "C:\\Users\\denni\\OneDrive - ITU\\GitHub\\Func_Prog\\Functional-Programming-\\Assignment8\\Assignment8.fsproj": {}
   },
   "projects": {
-    "C:\\Users\\denni\\OneDrive - ITU\\GitHub\\Functional_Prog\\Functional-Programming-\\Assignment8\\Assignment8.fsproj": {
+    "C:\\Users\\denni\\OneDrive - ITU\\GitHub\\Func_Prog\\Functional-Programming-\\Assignment8\\Assignment8.fsproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\denni\\OneDrive - ITU\\GitHub\\Functional_Prog\\Functional-Programming-\\Assignment8\\Assignment8.fsproj",
+        "projectUniqueName": "C:\\Users\\denni\\OneDrive - ITU\\GitHub\\Func_Prog\\Functional-Programming-\\Assignment8\\Assignment8.fsproj",
         "projectName": "Assignment8",
-        "projectPath": "C:\\Users\\denni\\OneDrive - ITU\\GitHub\\Functional_Prog\\Functional-Programming-\\Assignment8\\Assignment8.fsproj",
+        "projectPath": "C:\\Users\\denni\\OneDrive - ITU\\GitHub\\Func_Prog\\Functional-Programming-\\Assignment8\\Assignment8.fsproj",
         "packagesPath": "C:\\Users\\denni\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\denni\\OneDrive - ITU\\GitHub\\Functional_Prog\\Functional-Programming-\\Assignment8\\obj\\",
+        "outputPath": "C:\\Users\\denni\\OneDrive - ITU\\GitHub\\Func_Prog\\Functional-Programming-\\Assignment8\\obj\\",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-        ],
         "configFilePaths": [
           "C:\\Users\\denni\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [

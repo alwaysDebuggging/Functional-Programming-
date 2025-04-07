@@ -1,10 +1,7 @@
 ﻿// For more information see https://aka.ms/fsharp-console-apps
 open Interpreter
 open Interpreter.Parser
-
-open Interpreter.JParsec.TextParser
-
-open Interpreter.JParsec.TextParser
+open Interpreter.FParsecLight.TextParser
 
 
 let rec parseArgs =
@@ -16,9 +13,7 @@ let rec parseArgs =
 
 [<EntryPoint>]
 let main args =
-    let aa =  run (binop (pchar '+') pint32 pint32 |>>
-                 (fun (a, b) -> a + b)) "5 +  7"  |> printfn "%A"
+    let aa =  run paexpr "4+5"
 
-    aa
-
+    printfn "%A" aa
     0
