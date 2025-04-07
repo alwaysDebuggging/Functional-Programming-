@@ -69,9 +69,11 @@
     let binop op a b = a .>*> op .>*>. b 
 
 
+    let TernaryParse, Tptref = createParserForwardedToRef<aexpr>()
     let TermParse, tref = createParserForwardedToRef<aexpr>()
     let ProdParse, pref = createParserForwardedToRef<aexpr>()
     let AtomParse, aref = createParserForwardedToRef<aexpr>()
+    
 
     // 8.10 bool
     let BTermParse, Btref = createParserForwardedToRef<bexpr>()
@@ -80,7 +82,8 @@
    
 
     //Level: 1
-    //let condExpression= 
+    let condExpressionParse= BTermParse .>*> (pchar '?') .>*>. TermParse .>*> pchar ':' .>*>. TermParse 
+                            |>> (fun ((a, b), c) -> Cond (a, b, c ))
 
 
 
@@ -117,7 +120,7 @@
 
     do aref := choice [NegetiveNumber; NParse; ParParse; VariableParse; ReadParse; RandomNumbers;]
 
-    let paexpr = TermParse
+    let paexpr = TernaryParse
 
 
     //Level-1
@@ -136,33 +139,20 @@
 
     let LessOrEqualToParse = binop (pstring "<=") AtomParse TermParse |>> (fun (a, b ) -> a .<=. b) <?> "LessOrEqualToParse"
 
-    let LessOrEqualToParse = binop (pstring "<=") AtomParse TermParse |>> (fun (a, b ) -> a .<=. b) <?> "LessOrEqualToParse"
+    let GreaterOrEqualToParse = binop (pstring ">=") AtomParse TermParse |>> (fun (a, b ) -> a .>=. b) <?> "GreaterOrEqualToParse"
 
+    let NottParse = unop (pchar '~') BAtomParse |>> (fun (b ) -> ~~ b) <?> "Nott"
 
+    //let IsALetterParse = 
 
+    let TrueParse = ptrue |>> (fun _ -> TT(*true*)) <?> "True"
 
+    let NotTrueParse = pfalse |>> (fun (*b*) _ -> FF (*Not b*)) <?> "NotTrue"
 
-    let TrueParse = ptrue |>> (fun _ -> TT) <?> "True"
-
-    let NotTrueParse = pfalse |>> (fun _ -> FF) <?> "NotTrue"
-
-
-
-
-
-
-
-
-
-
+    do Btref := choice [ConjParse; OrParse; BAtomParse]
+    do Baref := choice [NottParse; EqualParse; NotEqualToParse; LessThanParse; GreaterThanParse; LessOrEqualToParse; GreaterOrEqualToParse;]
 
     let pbexpr = BTermParse
-
-
-
-
-
-
 
     let pstmnt = pstring "not implemented" |>> (fun _ -> Skip)
     
@@ -172,3 +162,4 @@
        
     let runProgramParser = run (pprogram .>> eof)  
 
+    let a = unop palphanumeric |>> 

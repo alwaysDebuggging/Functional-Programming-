@@ -13,7 +13,7 @@ let rec parseArgs =
 
 [<EntryPoint>]
 let main args =
-    let aa =  run paexpr "4+5"
+    let aa =  run pbexpr "true" |> printfn "%A"
 
     printfn "%A" aa
     0
