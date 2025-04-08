@@ -158,6 +158,7 @@
 
     //Stmnt
 
+    let pstmnt= pstring "not implemented" |>> (fun _ -> Skip)
     let pprogram = pstmnt |>> (fun s -> (Map.empty : program), s)
     
     let run = run
