@@ -20,11 +20,11 @@
     let pwhile    : Parser<string> = pstring "while"
     let pdo       : Parser<string> = pstring "do"
     let pdeclare  : Parser<string> = pstring "declare"
-    let ptrue     : Parser<string> = pstring "true "
-    let pfalse    : Parser<string> = pstring "false "
+    let ptrue     : Parser<string> = pstring "true"
+    let pfalse    : Parser<string> = pstring "false"
     let pprint    : Parser<string> = pstring "print"
-    let prandom   : Parser<string> = pstring "random "
-    let pread     : Parser<string> = pstring "read "
+    let prandom   : Parser<string> = pstring "random"
+    let pread     : Parser<string> = pstring "read"
     let pfunction : Parser<string> = pstring "function"
     let pret      : Parser<string> = pstring "ret"
     
@@ -80,18 +80,21 @@
     let BTermParse, Btref = createParserForwardedToRef<bexpr>()
     let BAtomParse, Baref = createParserForwardedToRef<bexpr>()
     
-   
+    let paexpr = TernaryParse
+    let pbexpr = BTermParse
+
+
 
     //Level: 1
-    let condExpressionParse = BTermParse .>*> (pchar '?') .>*>. TermParse .>*> pchar ':' .>*>. TermParse 
-                            |>> (fun ((a, b), c) -> Cond (a, b, c ))
+    let condExpressionParse = pbexpr .>*> (pchar '?') .>*>. paexpr .>*> pchar ':' .>*>. paexpr 
+                            |>> fun ((a, b), c) -> Cond (a, b, c )
     do terPtref := choice[condExpressionParse; TermParse]
 
 
     //Level: 2
-    let AddParse = binop (pchar '+') ProdParse TernaryParse |>> Add <?> "Add"
+    let AddParse = binop (pchar '+') ProdParse TermParse |>> Add <?> "Add"
 
-    let SubParse = binop (pchar '-') ProdParse TernaryParse |>> (fun (a,  b) -> Add (a, Mul (b, Num -1))) <?> "Sub"
+    let SubParse = binop (pchar '-') ProdParse TermParse |>> (fun (a,  b) ->  (.-.) a b ) <?> "Sub"
     do tref := choice [AddParse; SubParse; ProdParse]
 
 
@@ -109,51 +112,50 @@
 
     let NParse   = pint32 |>> Num <?> "Int"
 
-    let ParParse = parenthesise TernaryParse
+    let ParParse = parenthesise paexpr <?> "ParenthesisParse"
 
     let VariableParse = pid |>> Var <?> "Variable"
     
     let ReadParse = pread |>> (fun _ -> Read) <?> "Read"
 
-    let MemRead = squareBrackets TernaryParse <?> "MemRead"
+    let MemRead = squareBrackets paexpr |>> MemRead <?> "MemRead"
 
     let RandomNumbers = prandom |>> (fun _ -> Random) <?> "RandomNumber"
 
-    do aref := choice [NegetiveNumber; NParse; ParParse; VariableParse; ReadParse; RandomNumbers;]
+    do aref := choice [NegetiveNumber; NParse; ReadParse; RandomNumbers; MemRead; ParParse; VariableParse;]
 
-    let paexpr = TernaryParse
 
 
     //Level-1
 
-    let ConjParse = binop (pstring "/\\") BAtomParse BTermParse |>> Conj <?> "Conj"
+    let ConjParse = binop (pstring "/\\") BAtomParse BTermParse |>>(fun (b1, b2 )-> b1 .&&. b2 )<?> "Conj"
 
-    let OrParse = binop (pstring "\\/") BAtomParse BTermParse |>> (fun (b1, b2) -> b1 .||. b2) <?> "Conj"
+    let OrParse = binop (pstring "\\/") BAtomParse BTermParse |>> (fun (b1, b2) -> b1 .||. b2 ) <?> "or"
 
-    let EqualParse = binop (pchar '=') AtomParse TernaryParse |>> Eq <?> "Equal"
+    let EqualParse = binop (pchar '=') TermParse paexpr |>> Eq <?> "Equal"
 
-    let NotEqualToParse = binop (pstring "<>") AtomParse TernaryParse |>> (fun (a, b) -> a .<>. b) <?> "NotEqualTo"
+    let NotEqualToParse = binop (pstring "<>") TermParse paexpr |>> (fun (a, b) -> a .<>. b) <?> "NotEqualTo"
 
-    let LessThanParse = binop (pchar '<') AtomParse TernaryParse |>> (fun (a, b ) -> a .<. b) <?> "LessThan"
+    let LessThanParse = binop (pchar '<') TermParse paexpr |>> (fun (a, b ) -> a .<. b) <?> "LessThan"
 
-    let GreaterThanParse = binop (pchar '>') AtomParse TernaryParse |>> (fun (a, b ) -> a .>. b) <?> "GreaterThan"
+    let GreaterThanParse = binop (pchar '>') TermParse paexpr |>> (fun (a, b ) -> a .>. b) <?> "GreaterThan"
 
-    let LessOrEqualToParse = binop (pstring "<=") AtomParse TernaryParse |>> (fun (a, b ) -> a .<=. b) <?> "LessOrEqualToParse"
+    let LessOrEqualToParse = binop (pstring "<=") TermParse paexpr |>> (fun (a, b ) -> a .<=. b) <?> "LessOrEqualToParse"
 
-    let GreaterOrEqualToParse = binop (pstring ">=") AtomParse TernaryParse |>> (fun (a, b ) -> a .>=. b) <?> "GreaterOrEqualToParse"
+    let GreaterOrEqualToParse = binop (pstring ">=") TermParse paexpr |>> (fun (a, b ) -> a .>=. b) <?> "GreaterOrEqualToParse"
 
     let NottParse = unop (pchar '~') BAtomParse |>> (fun (b ) -> ~~ b) <?> "Nott"
 
-    //let IsALetterParse = 
 
     let TrueParse = ptrue |>> (fun _ -> TT) <?> "True"
 
-    let NotTrueParse = pfalse |>> (fun _ -> Not) <?> "NotTrue"
+    let FalseParse = pfalse |>> (fun _ -> Not TT) <?> "NotTrue"
 
-    do Btref := choice [ConjParse; OrParse; BAtomParse]
-    do Baref := choice [NottParse; EqualParse; NotEqualToParse; LessThanParse; GreaterThanParse; LessOrEqualToParse; GreaterOrEqualToParse;]
+    let BParParse = parenthesise pbexpr <?> "BoolParenthesisParse"
 
-    let pbexpr = BTermParse
+    do Btref := choice [OrParse; ConjParse; BAtomParse;]
+    do Baref := choice [TrueParse; FalseParse; NottParse; BParParse; EqualParse; NotEqualToParse; LessThanParse; GreaterThanParse; LessOrEqualToParse; GreaterOrEqualToParse;]
+
 
     let pstmnt = pstring "not implemented" |>> (fun _ -> Skip)
     
