@@ -70,7 +70,7 @@
 
     // a1 ternaty a2 term a3 prod a5 atom 
 
-    let TernaryParse, Tptref = createParserForwardedToRef<aexpr>()
+    let TernaryParse, terPtref   = createParserForwardedToRef<aexpr>()
     let TermParse, tref = createParserForwardedToRef<aexpr>()
     let ProdParse, pref = createParserForwardedToRef<aexpr>()
     let AtomParse, aref = createParserForwardedToRef<aexpr>()
@@ -83,9 +83,9 @@
    
 
     //Level: 1
-    let condExpressionParse= BTermParse .>*> (pchar '?') .>*>. TermParse .>*> pchar ':' .>*>. TermParse 
+    let condExpressionParse = BTermParse .>*> (pchar '?') .>*>. TermParse .>*> pchar ':' .>*>. TermParse 
                             |>> (fun ((a, b), c) -> Cond (a, b, c ))
-
+    do terPtref := choice[condExpressionParse; TermParse]
 
 
     //Level: 2
