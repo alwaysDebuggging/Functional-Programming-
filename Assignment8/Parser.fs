@@ -79,9 +79,14 @@
     // 8.10 bool
     let BTermParse, Btref = createParserForwardedToRef<bexpr>()
     let BAtomParse, Baref = createParserForwardedToRef<bexpr>()
+
+    let StmntTermParse, StTermref = createParserForwardedToRef<stmnt>()
+    let StmntAtomParse, StAtomref = createParserForwardedToRef<stmnt>()
     
     let paexpr = TernaryParse
     let pbexpr = BTermParse
+
+    let pstmnt = StmntTermParse
 
 
 
@@ -154,11 +159,20 @@
     let BParParse = parenthesise pbexpr <?> "BoolParenthesisParse"
 
     do Btref := choice [OrParse; ConjParse; BAtomParse;]
-    do Baref := choice [TrueParse; FalseParse; NottParse; BParParse; EqualParse; NotEqualToParse; LessThanParse; GreaterThanParse; LessOrEqualToParse; GreaterOrEqualToParse;]
     do Baref := choice [TrueParse; FalseParse; NottParse; EqualParse; NotEqualToParse; LessThanParse; GreaterThanParse; LessOrEqualToParse; GreaterOrEqualToParse; BParParse]
 
+    //Stmnt
 
-    let pstmnt = pstring "not implemented" |>> (fun _ -> Skip)
+    let free = binop (pstring "free") |>> Free <?> "Free"  
+
+    //let free = pfree >*>. parenthesise (paexpr .>*> pchar ',' .>*>. paexpr) |>> (fun (a, b) -> Free(a, b)) <?> "Free"  
+    //let alloc = palloc >*>. parenthesise (paexpr .>*> pchar ',' .>*>. paexpr) |>> (fun (a, b) -> Alloc(a, b)) <?> "Alloc"
+
+    do StTermref := choice [ ; StAtomref;]
+    do StAtomref := choice []
+
+
+
     
     let pprogram = pstmnt |>> (fun s -> (Map.empty : program), s)
     
