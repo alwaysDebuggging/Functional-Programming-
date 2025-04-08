@@ -105,7 +105,7 @@
 
 
     //Level: 4
-    let NegetiveNumber = unop (pchar '-') AtomParse |>> (fun n -> Mul(n, Num -1)) <?> "NegationNumber"
+    let NegetiveNumber = unop (pchar '-') AtomParse |>> (fun n -> Mul(Num -1, n)) <?> "NegationNumber"
 
     let NParse   = pint32 |>> Num <?> "Int"
 

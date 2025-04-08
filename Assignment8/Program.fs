@@ -13,7 +13,8 @@ let rec parseArgs =
 
 [<EntryPoint>]
 let main args =
-    let aa =  run pbexpr "true" |> printfn "%A"
+    let aa =  run paexpr "x + 27 < x * y ? 43 : z"
+
 
     printfn "%A" aa
     0
