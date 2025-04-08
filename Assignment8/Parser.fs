@@ -86,7 +86,7 @@
 
 
     //Level: 1
-    let condExpressionParse = pbexpr .>*> (pchar '?') .>*>. paexpr .>*> pchar ':' .>*>. paexpr 
+    let condExpressionParse = pbexpr .>*> pchar '?' .>*>. paexpr .>*> pchar ':' .>*>. paexpr 
                             |>> fun ((a, b), c) -> Cond (a, b, c )
     do terPtref := choice[condExpressionParse; TermParse]
 
@@ -155,6 +155,7 @@
 
     do Btref := choice [OrParse; ConjParse; BAtomParse;]
     do Baref := choice [TrueParse; FalseParse; NottParse; BParParse; EqualParse; NotEqualToParse; LessThanParse; GreaterThanParse; LessOrEqualToParse; GreaterOrEqualToParse;]
+    do Baref := choice [TrueParse; FalseParse; NottParse; EqualParse; NotEqualToParse; LessThanParse; GreaterThanParse; LessOrEqualToParse; GreaterOrEqualToParse; BParParse]
 
 
     let pstmnt = pstring "not implemented" |>> (fun _ -> Skip)

@@ -13,7 +13,7 @@ let rec parseArgs =
 
 [<EntryPoint>]
 let main args =
-    let aa = run TrueParse "true"
+    let aa = run pstmnt "free(27, x + y)"
 
 
     printfn "%A" aa
