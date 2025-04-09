@@ -158,7 +158,24 @@
 
     //Stmnt
 
-    let pstmnt= pstring "not implemented" |>> (fun _ -> Skip)
+    let StTermParse, stTermref = createParserForwardedToRef<stmnt>()
+    let StAtomParse, stAtpmref = createParserForwardedToRef<stmnt>()
+
+    let pstmnt = TernaryParse
+
+
+    let FreeParse = binop (parenthesise (paexpr .>*>. pchar ',' .>*>. paexpr .>*> pchar '+' .>*>. paexpr)) ProdParse paexpr |>> (fun (a, b) -> Free(a, b)) <?> "free"
+    let AllocParse = binop (parenthesise (paexpr .>*>. pchar ',' .>*>. paexpr .>*> pchar '+' .>*>. paexpr)) ProdParse paexpr |>> (fun (a, b) -> Alloc(a, b)) <?> "alloc"
+
+    let AllocParse = binop (parenthesise (paexpr .>*>. pchar ',' .>*>. paexpr .>*> pchar '+' .>*>. paexpr)) ProdParse paexpr |>> (fun (a, b) -> Declare(a, b)) <?> "declare"
+
+    let AllocParse = binop (parenthesise (paexpr .>*>. pchar ',' .>*>. paexpr .>*> pchar '+' .>*>. paexpr)) ProdParse paexpr |>> (fun (a, b) -> Alloc(a, b)) <?> "alloc"
+
+
+    do stTermref := choice []
+    do stAtpmref := choice []
+
+
     let pprogram = pstmnt |>> (fun s -> (Map.empty : program), s)
     
     let run = run
