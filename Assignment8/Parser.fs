@@ -70,45 +70,45 @@
 
     // a1 ternaty a2 term a3 prod a5 atom 
 
-    let TernaryParse, terPtref   = createParserForwardedToRef<aexpr>()
-    let TermParse, tref = createParserForwardedToRef<aexpr>()
-    let ProdParse, pref = createParserForwardedToRef<aexpr>()
-    let AtomParse, aref = createParserForwardedToRef<aexpr>()
+    let A1, A1ref = createParserForwardedToRef<aexpr>()
+    let A2, A2ref = createParserForwardedToRef<aexpr>()
+    let A3, A3ref = createParserForwardedToRef<aexpr>()
+    let A4, A4ref = createParserForwardedToRef<aexpr>()
     
 
     // 8.10 bool
-    let BTermParse, Btref = createParserForwardedToRef<bexpr>()
-    let BAtomParse, Baref = createParserForwardedToRef<bexpr>()
+    let B1, B1ref = createParserForwardedToRef<bexpr>()
+    let B2, B2ref = createParserForwardedToRef<bexpr>()
 
     
-    let paexpr = TernaryParse
-    let pbexpr = BTermParse
+    let paexpr = A1
+    let pbexpr = B1
 
 
     //Level: 1
     let condExpressionParse = pbexpr .>*> pchar '?' .>*>. paexpr .>*> pchar ':' .>*>. paexpr 
                             |>> fun ((a, b), c) -> Cond (a, b, c )
-    do terPtref := choice[condExpressionParse; TermParse]
+    do A1ref := choice[condExpressionParse; A2]
 
 
     //Level: 2
-    let AddParse = binop (pchar '+') ProdParse TermParse |>> Add <?> "Add"
+    let AddParse = binop (pchar '+') A3 A2 |>> Add <?> "Add"
 
-    let SubParse = binop (pchar '-') ProdParse TermParse |>> (fun (a,  b) ->  (.-.) a b ) <?> "Sub"
-    do tref := choice [AddParse; SubParse; ProdParse]
+    let SubParse = binop (pchar '-') A3 A2 |>> (fun (a,  b) ->  (.-.) a b ) <?> "Sub"
+    do A2ref := choice [AddParse; SubParse; A3]
 
 
     //Level: 3
-    let MulParse = binop (pchar '*') AtomParse ProdParse |>> Mul <?> "Mul"
+    let MulParse = binop (pchar '*') A4 A3 |>> Mul <?> "Mul"
 
-    let DivParse = binop (pchar '/') AtomParse ProdParse |>> Div <?> "Div"
+    let DivParse = binop (pchar '/') A4 A3 |>> Div <?> "Div"
 
-    let ModParse = binop (pchar '%') AtomParse ProdParse |>> Mod <?> "Mod"
-    do pref := choice [MulParse; DivParse; ModParse; AtomParse]
+    let ModParse = binop (pchar '%') A4 A3 |>> Mod <?> "Mod"
+    do A3ref := choice [MulParse; DivParse; ModParse; A4]
 
 
     //Level: 4
-    let NegetiveNumber = unop (pchar '-') AtomParse |>> (fun n -> Mul(Num -1, n)) <?> "NegationNumber"
+    let NegetiveNumber = unop (pchar '-') A4 |>> (fun n -> Mul(Num -1, n)) <?> "NegationNumber"
 
     let NParse   = pint32 |>> Num <?> "Int"
 
@@ -118,33 +118,34 @@
     
     let ReadParse = pread |>> (fun _ -> Read) <?> "Read"
 
-    let MemRead = squareBrackets paexpr |>> MemRead <?> "MemRead"
+    let MemReadParse = squareBrackets paexpr 
+                    |>> MemRead <?> "MemRead"
 
     let RandomNumbers = prandom |>> (fun _ -> Random) <?> "RandomNumber"
 
-    do aref := choice [NegetiveNumber; NParse; ReadParse; RandomNumbers; MemRead; ParParse; VariableParse;]
+    do A4ref := choice [NegetiveNumber; NParse; ReadParse; RandomNumbers; MemReadParse; ParParse; VariableParse;]
 
 
 
     //Level-1
 
-    let ConjParse = binop (pstring "/\\") BAtomParse BTermParse |>>(fun (b1, b2 )-> b1 .&&. b2 )<?> "Conj"
+    let ConjParse = binop (pstring "/\\") B2 B1 |>>(fun (b1, b2 )-> b1 .&&. b2 )<?> "Conj"
 
-    let OrParse = binop (pstring "\\/") BAtomParse BTermParse |>> (fun (b1, b2) -> b1 .||. b2 ) <?> "or"
+    let OrParse = binop (pstring "\\/") B2 B1 |>> (fun (b1, b2) -> b1 .||. b2 ) <?> "or"
 
-    let EqualParse = binop (pchar '=') TermParse paexpr |>> Eq <?> "Equal"
+    let EqualParse = binop (pchar '=') A2 paexpr |>> Eq <?> "Equal"
 
-    let NotEqualToParse = binop (pstring "<>") TermParse paexpr |>> (fun (a, b) -> a .<>. b) <?> "NotEqualTo"
+    let NotEqualToParse = binop (pstring "<>") A2 paexpr |>> (fun (a, b) -> a .<>. b) <?> "NotEqualTo"
 
-    let LessThanParse = binop (pchar '<') TermParse paexpr |>> (fun (a, b ) -> a .<. b) <?> "LessThan"
+    let LessThanParse = binop (pchar '<') A2 paexpr |>> (fun (a, b ) -> a .<. b) <?> "LessThan"
 
-    let GreaterThanParse = binop (pchar '>') TermParse paexpr |>> (fun (a, b ) -> a .>. b) <?> "GreaterThan"
+    let GreaterThanParse = binop (pchar '>') A2 paexpr |>> (fun (a, b ) -> a .>. b) <?> "GreaterThan"
 
-    let LessOrEqualToParse = binop (pstring "<=") TermParse paexpr |>> (fun (a, b ) -> a .<=. b) <?> "LessOrEqualToParse"
+    let LessOrEqualToParse = binop (pstring "<=") A2 paexpr |>> (fun (a, b ) -> a .<=. b) <?> "LessOrEqualToParse"
 
-    let GreaterOrEqualToParse = binop (pstring ">=") TermParse paexpr |>> (fun (a, b ) -> a .>=. b) <?> "GreaterOrEqualToParse"
+    let GreaterOrEqualToParse = binop (pstring ">=") A2 paexpr |>> (fun (a, b ) -> a .>=. b) <?> "GreaterOrEqualToParse"
 
-    let NottParse = unop (pchar '~') BAtomParse |>> (fun (b ) -> ~~ b) <?> "Nott"
+    let NottParse = unop (pchar '~') B2 |>> (fun (b ) -> ~~ b) <?> "Nott"
 
 
     let TrueParse = ptrue |>> (fun _ -> TT) <?> "True"
@@ -153,27 +154,52 @@
 
     let BParParse = parenthesise pbexpr <?> "BoolParenthesisParse"
 
-    do Btref := choice [OrParse; ConjParse; BAtomParse;]
-    do Baref := choice [TrueParse; FalseParse; NottParse; EqualParse; NotEqualToParse; LessThanParse; GreaterThanParse; LessOrEqualToParse; GreaterOrEqualToParse; BParParse]
+    do B1ref := choice [OrParse; ConjParse; B2;]
+    do B2ref := choice [TrueParse; FalseParse; NottParse; EqualParse; NotEqualToParse; LessThanParse; GreaterThanParse; LessOrEqualToParse; GreaterOrEqualToParse; BParParse]
 
     //Stmnt
 
-    let StTermParse, stTermref = createParserForwardedToRef<stmnt>()
-    let StAtomParse, stAtpmref = createParserForwardedToRef<stmnt>()
+    let S1, s1Ref = createParserForwardedToRef<stmnt>()
+    let S2, s2Ref = createParserForwardedToRef<stmnt>()
 
-    let pstmnt = TernaryParse
+    let pstmnt = S1
 
-
-    let FreeParse = binop (parenthesise (paexpr .>*>. pchar ',' .>*>. paexpr .>*> pchar '+' .>*>. paexpr)) ProdParse paexpr |>> (fun (a, b) -> Free(a, b)) <?> "free"
-    let AllocParse = binop (parenthesise (paexpr .>*>. pchar ',' .>*>. paexpr .>*> pchar '+' .>*>. paexpr)) ProdParse paexpr |>> (fun (a, b) -> Alloc(a, b)) <?> "alloc"
-
-    let AllocParse = binop (parenthesise (paexpr .>*>. pchar ',' .>*>. paexpr .>*> pchar '+' .>*>. paexpr)) ProdParse paexpr |>> (fun (a, b) -> Declare(a, b)) <?> "declare"
-
-    let AllocParse = binop (parenthesise (paexpr .>*>. pchar ',' .>*>. paexpr .>*> pchar '+' .>*>. paexpr)) ProdParse paexpr |>> (fun (a, b) -> Alloc(a, b)) <?> "alloc"
+    //level-1
+    let SemiParse = binop (pchar ';') S2 S1 |>> (fun (a, b) -> Seq (a, b)) <?> "Sequence"
 
 
-    do stTermref := choice []
-    do stAtpmref := choice []
+    //level-2
+
+    let AssignParsePid = binop (pstring ":=") pid A1
+                        |>> (fun (a, b)-> Assign(a, b) )<?> "Assign" 
+
+    let DeclareParse = pdeclare >>. spaces1 >>. pid 
+                    |>> (fun v -> Declare v ) <?> "declare"
+
+    let IfThenElseBlockParse = pif .>> spaces1 >>. parenthesise(B1) .>> spaces1 .>>. curlybrackets(S1) .>> spaces1 .>> pelse .>> spaces1 .>>. curlybrackets(S1) 
+                            |>> (fun ((B1, S1), S2) -> If(B1, S1, S2)) <?> "IfElse"
+
+    let IfParse = pif .>> spaces1 >>. parenthesise(B1) .>> spaces1 .>>. curlybrackets(S1)
+                |>> (fun (a, b) -> IT(a, b)) <?> "If"
+
+    let WhileParse = pwhile >>. spaces1 >>. parenthesise(B1) .>> spaces1 .>>. curlybrackets(S1)
+                    |>> (fun (B1, S1) -> While(B1,S1)) <?> "While"
+
+    let AllocParse = palloc >*>. parenthesise(binop (pchar ',') pid  A1) 
+                    |>> (fun (a, b) -> Alloc(a, b)) <?> "alloc"
+
+    let FreeParse = pfree >*>. parenthesise(binop (pchar ',') A1 A1) 
+                |>> (fun (a, b) -> Free(a, b)) <?> "free"
+    
+    let PrintParse = pprint >*>. parenthesise(parseString .>*>. many1(pchar ',' >*>. A1)) 
+                    |>> (fun (a, b) -> Print(b, a)) <?> "Print"
+
+    let AssignParsePMem = binop (pstring ":=") (squareBrackets A1)  A1
+                                |>> (fun (a, b) -> MemWrite(a, b)) <?> "MemAssign"
+
+
+    do s1Ref := choice [SemiParse; S2]
+    do s2Ref := choice [IfThenElseBlockParse; IfParse; WhileParse; AssignParsePMem; AssignParsePid; FreeParse; AllocParse; FreeParse; DeclareParse; PrintParse;]
 
 
     let pprogram = pstmnt |>> (fun s -> (Map.empty : program), s)

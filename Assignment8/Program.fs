@@ -6,14 +6,14 @@ open Interpreter.FParsecLight.TextParser
 
 let rec parseArgs =
     function
-    | []                -> Map.empty
-    | name::value::rest -> Map.add name (System.Int32.Parse(value)) (parseArgs rest)
-    | _                 -> failwith "Invalid input"
+    | [] -> Map.empty
+    | name :: value :: rest -> Map.add name (System.Int32.Parse(value)) (parseArgs rest)
+    | _ -> failwith "Invalid input"
 
 
 [<EntryPoint>]
 let main args =
-    let aa = run pstmnt "free(27, x + y)"
+    let aa = run pstmnt "if (x < y) { x := 5; y\n := 27 / (5 %\t 0) } else { y := 7 }"
 
 
     printfn "%A" aa
